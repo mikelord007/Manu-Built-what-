@@ -23,13 +23,13 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="w-full max-w-5xl px-4 sm:px-8 pt-16 pb-24">
-        <header className="mb-16">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-center gap-2 sm:gap-3">
+      <div className="w-full max-w-5xl px-4 sm:px-6 pt-16 pb-24">
+        <header className="mb-16 overflow-hidden">
+          <div className="flex flex-col items-center gap-2">
             <h1 className="font-mono font-black text-center text-5xl sm:text-6xl md:text-7xl tracking-tight leading-none">
               Manu Built What? 😱
             </h1>
-            <p className="font-mono italic text-sm sm:mb-1 -rotate-2 hover:-rotate-1 hover:-translate-y-1 transition-transform duration-300 cursor-default text-(--muted) tracking-wide text-center sm:text-left">
+            <p className="font-mono italic text-sm -rotate-2 hover:-rotate-1 hover:-translate-y-1 transition-transform duration-300 cursor-default text-(--muted) tracking-wide text-center">
               /* work in progress, more coming v soon */
             </p>
           </div>
