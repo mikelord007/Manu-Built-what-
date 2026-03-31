@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import ThemeToggle from "@/components/ThemeToggle";
+import PostHogProvider from "@/components/PostHogProvider";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -79,8 +80,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ThemeToggle />
-        {children}
+        <PostHogProvider>
+          <ThemeToggle />
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );
