@@ -3,6 +3,9 @@ title: "Handrail"
 description: "a voice-first Android GUI agent for Indian languages — narrates any screen aloud in your language, or takes over a multi-step task and hard-stops before it pays, sends, or submits anything"
 date: 2026-07-27
 image: "/images/handrail.png"
+imageAspect: "4/5"
+detailMedia: "/videos/handrail.webm"
+detailAspect: "9/20"
 githubUrl: "https://github.com/mikelord007/HandRail-Sarvam-Hack"
 ---
 

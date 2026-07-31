@@ -14,7 +14,10 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
       href={`/projects/${project.slug}`}
       className="group flex h-full flex-col transition-colors hover:bg-(--card-hover-bg) hover:text-(--card-hover-fg)"
     >
-      <div className="relative w-full aspect-video bg-(--fg) overflow-hidden shrink-0">
+      <div
+        className={`relative w-full bg-(--fg) overflow-hidden shrink-0 ${project.imageAspect ? '' : 'aspect-video'}`}
+        style={project.imageAspect ? { aspectRatio: project.imageAspect } : undefined}
+      >
         {project.image ? (
           <Image
             src={project.image}

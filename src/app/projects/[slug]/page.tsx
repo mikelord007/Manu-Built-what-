@@ -146,17 +146,20 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               const mediaSrc = project.detailMedia ?? project.image
               if (!mediaSrc) return null
               const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(mediaSrc)
+              const aspectClass = project.detailAspect ? '' : 'aspect-video'
+              const aspectStyle = project.detailAspect ? { aspectRatio: project.detailAspect } : undefined
               return isVideo ? (
                 <video
                   src={mediaSrc}
-                  className="w-full aspect-video mb-3 border border-(--border) object-cover"
+                  className={`w-full mb-3 border border-(--border) object-cover ${aspectClass}`}
+                  style={aspectStyle}
                   autoPlay
                   loop
                   muted
                   playsInline
                 />
               ) : (
-                <div className="relative w-full aspect-video mb-3 border border-(--border)">
+                <div className={`relative w-full mb-3 border border-(--border) ${aspectClass}`} style={aspectStyle}>
                   <Image
                     src={mediaSrc}
                     alt={project.title}

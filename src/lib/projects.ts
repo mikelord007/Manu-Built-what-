@@ -12,7 +12,9 @@ export interface ProjectMeta {
   description: string
   date: string
   image?: string
+  imageAspect?: string
   detailMedia?: string
+  detailAspect?: string
   liveUrl?: string
   githubUrl?: string
 }
@@ -36,7 +38,9 @@ export function getAllProjects(): ProjectMeta[] {
           description: data.description ?? '',
           date: data.date ? String(data.date) : '',
           ...(data.image ? { image: data.image } : {}),
+          ...(data.imageAspect ? { imageAspect: data.imageAspect } : {}),
           ...(data.detailMedia ? { detailMedia: data.detailMedia } : {}),
+          ...(data.detailAspect ? { detailAspect: data.detailAspect } : {}),
           ...(data.liveUrl ? { liveUrl: data.liveUrl } : {}),
           ...(data.githubUrl ? { githubUrl: data.githubUrl } : {}),
         }
@@ -62,7 +66,9 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     description: data.description ?? '',
     date: data.date ? String(data.date) : '',
     image: data.image,
+    imageAspect: data.imageAspect,
     detailMedia: data.detailMedia,
+    detailAspect: data.detailAspect,
     liveUrl: data.liveUrl,
     githubUrl: data.githubUrl,
     contentHtml: processed.toString(),
