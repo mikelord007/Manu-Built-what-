@@ -165,7 +165,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     src={mediaSrc}
                     alt={project.title}
                     fill
-                    className="object-cover grayscale"
+                    className="object-cover"
                     priority
                   />
                 </div>
