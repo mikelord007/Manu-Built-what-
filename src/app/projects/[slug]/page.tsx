@@ -148,10 +148,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(mediaSrc)
               const aspectClass = project.detailAspect ? '' : 'aspect-video'
               const aspectStyle = project.detailAspect ? { aspectRatio: project.detailAspect } : undefined
+              const sizeClass = project.detailAspect ? 'mx-auto max-h-[70vh] w-auto max-w-full' : 'w-full'
               return isVideo ? (
                 <video
                   src={mediaSrc}
-                  className={`w-full mb-3 border border-(--border) object-cover ${aspectClass}`}
+                  className={`${sizeClass} mb-3 border border-(--border) object-cover ${aspectClass}`}
                   style={aspectStyle}
                   autoPlay
                   loop
@@ -159,7 +160,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   playsInline
                 />
               ) : (
-                <div className={`relative w-full mb-3 border border-(--border) ${aspectClass}`} style={aspectStyle}>
+                <div className={`relative mb-3 border border-(--border) ${sizeClass} ${aspectClass}`} style={aspectStyle}>
                   <Image
                     src={mediaSrc}
                     alt={project.title}
