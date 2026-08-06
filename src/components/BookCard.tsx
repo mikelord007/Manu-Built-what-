@@ -21,9 +21,14 @@ function Stars({ rating }: { rating: number }) {
 export default function BookCard({ book }: { book: BookMeta }) {
   return (
     <div className="flex h-full flex-col border border-(--border)">
-      <div className="relative w-full aspect-[2/3] bg-(--fg) overflow-hidden shrink-0">
+      <div className="group relative w-full aspect-[2/3] bg-(--fg) overflow-hidden shrink-0">
         {book.cover ? (
-          <Image src={book.cover} alt={book.title} fill className="object-cover grayscale" />
+          <Image
+            src={book.cover}
+            alt={book.title}
+            fill
+            className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
+          />
         ) : (
           <div className="w-full h-full bg-(--fg) grid place-items-center">
             <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-(--bg) opacity-40 px-2 text-center">

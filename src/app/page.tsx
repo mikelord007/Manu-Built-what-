@@ -52,9 +52,9 @@ export default function Home() {
             </div>
             <Link
               href="/books"
-              className="border border-(--border) px-3 py-1 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-(--fg) hover:text-(--bg)"
+              className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
             >
-              Books
+              [ Books I&apos;m Reading ]
             </Link>
           </div>
         </header>
