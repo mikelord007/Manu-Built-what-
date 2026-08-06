@@ -6,6 +6,7 @@ import {
   getUpcomingReads,
   getCompletedBooks,
   getYearlyBookStats,
+  getFavoriteQuote,
   withResolvedMetadata,
 } from '@/lib/books'
 import ReadingCard from '@/components/ReadingCard'
@@ -26,6 +27,7 @@ export default async function BooksPage() {
   const upcomingReads = getUpcomingReads(books)
   const completedBooks = getCompletedBooks(books)
   const stats = getYearlyBookStats(books, new Date().getFullYear())
+  const favoriteQuote = getFavoriteQuote()
 
   return (
     <main className="min-h-screen flex flex-col items-center">
@@ -46,7 +48,7 @@ export default async function BooksPage() {
           </p>
         </header>
 
-        <BookStats stats={stats} />
+        <BookStats stats={stats} favoriteQuote={favoriteQuote} />
 
         <section className="mb-16">
           <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
@@ -56,8 +58,8 @@ export default async function BooksPage() {
             <p className="font-mono text-sm text-(--muted)">nothing in progress right now.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {currentlyReading.map(book => (
-                <ReadingCard key={book.slug} book={book} />
+              {currentlyReading.map((book, i) => (
+                <ReadingCard key={book.slug} book={book} priority={i === 0} />
               ))}
             </div>
           )}

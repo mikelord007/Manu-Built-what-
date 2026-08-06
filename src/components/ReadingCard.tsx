@@ -7,7 +7,7 @@ function formatBookDate(date: string): string {
   return new Intl.DateTimeFormat('en-GB').format(parsed)
 }
 
-export default function ReadingCard({ book }: { book: BookMeta }) {
+export default function ReadingCard({ book, priority }: { book: BookMeta; priority?: boolean }) {
   return (
     <div className="flex h-full flex-col border border-(--border)">
       <div className="group relative w-full aspect-[2/3] bg-(--fg) overflow-hidden shrink-0">
@@ -16,6 +16,8 @@ export default function ReadingCard({ book }: { book: BookMeta }) {
             src={book.cover}
             alt={book.title}
             fill
+            sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
+            priority={priority}
             className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
           />
         ) : (

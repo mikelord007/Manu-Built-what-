@@ -29,15 +29,57 @@ export interface YearlyBookStats {
   completedCount: number
   booksPerMonth: number[]
   totalPages: number
-  averageRating: number | null
 }
 
-interface OpenLibraryMeta {
+export interface FavoriteQuote {
+  text: string
+  book?: string
+  author?: string
+  // The in-book character who says the line, if it's dialogue you want
+  // credited to them rather than the author (e.g. "Ryland Grace" instead
+  // of "Andy Weir" for a Project Hail Mary quote).
+  speaker?: string
+}
+
+interface BookProviderMeta {
   cover?: string
   pages?: number
 }
 
-async function fetchOpenLibraryMeta(title: string, author: string): Promise<OpenLibraryMeta> {
+async function fetchGoogleBooksMeta(title: string, author: string): Promise<BookProviderMeta> {
+  try {
+    const q = `intitle:"${title}" inauthor:"${author}"`
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY
+    const url = `https://www.googleapis.com/books/v1/volumes?${new URLSearchParams({
+      q,
+      maxResults: '1',
+      ...(apiKey ? { key: apiKey } : {}),
+    })}`
+    const res = await fetch(url, { cache: 'force-cache' })
+    if (!res.ok) return {}
+    const data = await res.json()
+    const item = data?.items?.[0]
+    const info = item?.volumeInfo
+    if (!info) return {}
+    // The `thumbnail`/`smallThumbnail` fields Google returns default to
+    // zoom=1 (a ~130px preview) with a page-curl graphic baked into the
+    // bottom-right corner. Rebuilding the URL with zoom=0 and edge=none
+    // gets the full-resolution cover with no curl artifact.
+    const hasCover = Boolean(info.imageLinks?.thumbnail ?? info.imageLinks?.smallThumbnail)
+    const cover = hasCover && item.id
+      ? `https://books.google.com/books/content?id=${item.id}&printsec=frontcover&img=1&zoom=0&edge=none&source=gbs_api`
+      : undefined
+    return {
+      cover,
+      pages: typeof info.pageCount === 'number' && info.pageCount > 0 ? info.pageCount : undefined,
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch Google Books metadata for "${title}"`, error)
+    return {}
+  }
+}
+
+async function fetchOpenLibraryMeta(title: string, author: string): Promise<BookProviderMeta> {
   try {
     const q = `title:"${title}" author:"${author}"`
     const url = `https://openlibrary.org/search.json?${new URLSearchParams({
@@ -63,19 +105,24 @@ async function fetchOpenLibraryMeta(title: string, author: string): Promise<Open
   }
 }
 
-// Covers and page counts are fetched automatically from Open Library so books
-// only need title/author/status in frontmatter. A manually set `cover` or
-// `pages` value in frontmatter always wins over the fetched one.
+// Covers and page counts are fetched automatically so books only need
+// title/author/status in frontmatter. Google Books is tried first (better
+// coverage of newer releases); Open Library fills in whatever's still
+// missing. A manually set `cover` or `pages` value in frontmatter always
+// wins over any fetched value.
 export async function withResolvedMetadata(books: BookMeta[]): Promise<BookMeta[]> {
   return Promise.all(
     books.map(async book => {
       if (book.cover && typeof book.pages === 'number') return book
-      const meta = await fetchOpenLibraryMeta(book.title, book.author)
-      return {
-        ...book,
-        cover: book.cover ?? meta.cover,
-        pages: book.pages ?? meta.pages,
+      const google = await fetchGoogleBooksMeta(book.title, book.author)
+      let cover = book.cover ?? google.cover
+      let pages = book.pages ?? google.pages
+      if (!cover || typeof pages !== 'number') {
+        const openLibrary = await fetchOpenLibraryMeta(book.title, book.author)
+        cover = cover ?? openLibrary.cover
+        pages = pages ?? openLibrary.pages
       }
+      return { ...book, cover, pages }
     })
   )
 }
@@ -105,6 +152,19 @@ function readBookIndex(): BookIndexEntry[] {
         : 'upcoming',
       ...(typeof entry.order === 'number' ? { order: entry.order } : {}),
     }))
+}
+
+export function getFavoriteQuote(): FavoriteQuote | null {
+  if (!fs.existsSync(indexPath)) return null
+  const { data } = matter(fs.readFileSync(indexPath, 'utf8'))
+  const quote = data.favoriteQuote
+  if (!quote || typeof quote !== 'object' || typeof quote.text !== 'string' || !quote.text.trim()) return null
+  return {
+    text: quote.text,
+    ...(typeof quote.book === 'string' && quote.book ? { book: quote.book } : {}),
+    ...(typeof quote.author === 'string' && quote.author ? { author: quote.author } : {}),
+    ...(typeof quote.speaker === 'string' && quote.speaker ? { speaker: quote.speaker } : {}),
+  }
 }
 
 function readBookDetails(slug: string): Partial<BookMeta> {
@@ -161,17 +221,11 @@ export function getYearlyBookStats(books: BookMeta[], year: number): YearlyBookS
 
   const booksPerMonth = Array(12).fill(0)
   let totalPages = 0
-  let ratingSum = 0
-  let ratingCount = 0
 
   for (const book of completedThisYear) {
     const month = new Date(book.finishedDate as string).getMonth()
     booksPerMonth[month] += 1
     if (typeof book.pages === 'number') totalPages += book.pages
-    if (typeof book.rating === 'number') {
-      ratingSum += book.rating
-      ratingCount += 1
-    }
   }
 
   return {
@@ -179,6 +233,5 @@ export function getYearlyBookStats(books: BookMeta[], year: number): YearlyBookS
     completedCount: completedThisYear.length,
     booksPerMonth,
     totalPages,
-    averageRating: ratingCount > 0 ? ratingSum / ratingCount : null,
   }
 }

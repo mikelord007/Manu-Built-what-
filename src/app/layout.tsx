@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import ThemeToggle from "@/components/ThemeToggle";
 import PostHogProvider from "@/components/PostHogProvider";
 import "./globals.css";
@@ -65,8 +66,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistMono.variable}`} suppressHydrationWarning>
-      <head>
-        <script
+      <body>
+        <Script
+          id="no-flash-theme"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function () {
@@ -78,8 +81,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body>
         <PostHogProvider>
           <ThemeToggle />
           {children}

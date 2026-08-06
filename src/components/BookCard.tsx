@@ -18,7 +18,7 @@ function Stars({ rating }: { rating: number }) {
   )
 }
 
-export default function BookCard({ book }: { book: BookMeta }) {
+export default function BookCard({ book, priority }: { book: BookMeta; priority?: boolean }) {
   return (
     <div className="flex h-full flex-col border border-(--border)">
       <div className="group relative w-full aspect-[2/3] bg-(--fg) overflow-hidden shrink-0">
@@ -27,6 +27,8 @@ export default function BookCard({ book }: { book: BookMeta }) {
             src={book.cover}
             alt={book.title}
             fill
+            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+            priority={priority}
             className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
           />
         ) : (

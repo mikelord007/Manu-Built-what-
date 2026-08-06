@@ -8,7 +8,7 @@ function formatProjectDate(date: string): string {
   return new Intl.DateTimeFormat('en-GB').format(parsed)
 }
 
-export default function ProjectCard({ project }: { project: ProjectMeta }) {
+export default function ProjectCard({ project, priority }: { project: ProjectMeta; priority?: boolean }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -23,6 +23,8 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
             src={project.image}
             alt={project.title}
             fill
+            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+            priority={priority}
             className="object-cover grayscale group-hover:opacity-20 transition-opacity"
           />
         ) : (
