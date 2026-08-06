@@ -3,6 +3,8 @@ import path from 'path'
 import matter from 'gray-matter'
 
 const booksDir = path.join(process.cwd(), 'content/books')
+const indexPath = path.join(booksDir, 'index.md')
+const detailsDir = path.join(booksDir, 'details')
 
 export type BookStatus = 'completed' | 'reading' | 'upcoming'
 
@@ -78,39 +80,59 @@ export async function withResolvedMetadata(books: BookMeta[]): Promise<BookMeta[
   )
 }
 
+interface BookIndexEntry {
+  slug: string
+  title: string
+  author: string
+  status: BookStatus
+  order?: number
+}
+
+function readBookIndex(): BookIndexEntry[] {
+  if (!fs.existsSync(indexPath)) return []
+  const { data } = matter(fs.readFileSync(indexPath, 'utf8'))
+  const entries = Array.isArray(data.books) ? data.books : []
+  return entries
+    .filter((entry: unknown): entry is Record<string, unknown> =>
+      !!entry && typeof entry === 'object' && typeof (entry as Record<string, unknown>).slug === 'string'
+    )
+    .map(entry => ({
+      slug: entry.slug as string,
+      title: (entry.title as string) ?? (entry.slug as string),
+      author: (entry.author as string) ?? '',
+      status: ['completed', 'reading', 'upcoming'].includes(entry.status as string)
+        ? (entry.status as BookStatus)
+        : 'upcoming',
+      ...(typeof entry.order === 'number' ? { order: entry.order } : {}),
+    }))
+}
+
+function readBookDetails(slug: string): Partial<BookMeta> {
+  const fullPath = path.join(detailsDir, `${slug}.md`)
+  if (!fs.existsSync(fullPath)) return {}
+  try {
+    const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
+    return {
+      ...(data.cover ? { cover: data.cover } : {}),
+      ...(data.startedDate ? { startedDate: String(data.startedDate) } : {}),
+      ...(data.finishedDate ? { finishedDate: String(data.finishedDate) } : {}),
+      ...(typeof data.pages === 'number' ? { pages: data.pages } : {}),
+      ...(typeof data.rating === 'number' ? { rating: data.rating } : {}),
+      ...(data.summary ? { summary: data.summary } : {}),
+      ...(data.whatChangedForMe ? { whatChangedForMe: data.whatChangedForMe } : {}),
+      ...(data.link ? { link: data.link } : {}),
+    }
+  } catch (error) {
+    console.warn(`Skipping invalid book details file: ${slug}.md`, error)
+    return {}
+  }
+}
+
 export function getAllBooks(): BookMeta[] {
-  if (!fs.existsSync(booksDir)) return []
-  const files = fs.readdirSync(booksDir).filter(f => f.endsWith('.md'))
-  return files
-    .map<BookMeta | null>(filename => {
-      const slug = filename.replace(/\.md$/, '')
-      const fullPath = path.join(booksDir, filename)
-      try {
-        const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
-        const status: BookStatus = ['completed', 'reading', 'upcoming'].includes(data.status)
-          ? data.status
-          : 'upcoming'
-        return {
-          slug,
-          title: data.title ?? slug,
-          author: data.author ?? '',
-          status,
-          ...(data.cover ? { cover: data.cover } : {}),
-          ...(data.startedDate ? { startedDate: String(data.startedDate) } : {}),
-          ...(data.finishedDate ? { finishedDate: String(data.finishedDate) } : {}),
-          ...(typeof data.pages === 'number' ? { pages: data.pages } : {}),
-          ...(typeof data.rating === 'number' ? { rating: data.rating } : {}),
-          ...(data.summary ? { summary: data.summary } : {}),
-          ...(data.whatChangedForMe ? { whatChangedForMe: data.whatChangedForMe } : {}),
-          ...(data.link ? { link: data.link } : {}),
-          ...(typeof data.order === 'number' ? { order: data.order } : {}),
-        }
-      } catch (error) {
-        console.warn(`Skipping invalid book file: ${filename}`, error)
-        return null
-      }
-    })
-    .filter((book): book is BookMeta => book !== null)
+  return readBookIndex().map(entry => ({
+    ...entry,
+    ...readBookDetails(entry.slug),
+  }))
 }
 
 export function getCurrentlyReading(books: BookMeta[]): BookMeta[] {
@@ -123,6 +145,7 @@ export function getUpcomingReads(books: BookMeta[]): BookMeta[] {
   return books
     .filter(b => b.status === 'upcoming')
     .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
+    .slice(0, 4)
 }
 
 export function getCompletedBooks(books: BookMeta[]): BookMeta[] {

@@ -34,7 +34,7 @@ export default function Home() {
               /* work in progress, more coming v soon */
             </p>
           </div>
-          <p className="font-mono text-xs mt-4 tracking-widest uppercase text-(--muted)">2026</p>
+          <p className="font-mono text-xs mt-10 sm:mt-14 tracking-widest uppercase text-(--muted)">2026</p>
           <div className="flex items-center justify-between mt-6">
             <div className="flex items-center gap-4">
               <a href="https://x.com/topagentmike007" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="text-(--muted) hover:text-(--fg) transition-colors">

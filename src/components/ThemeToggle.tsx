@@ -33,7 +33,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="fixed right-4 top-4 z-50 border px-3 py-1 text-xs uppercase tracking-widest transition-colors bg-(--bg) text-(--fg) border-(--border) hover:bg-(--fg) hover:text-(--bg)"
+      className="absolute sm:fixed right-4 top-4 z-50 border px-3 py-1 text-xs uppercase tracking-widest transition-colors bg-(--bg) text-(--fg) border-(--border) hover:bg-(--fg) hover:text-(--bg)"
       aria-label="Toggle dark mode"
     >
       {mounted ? (theme === "dark" ? "Light" : "Dark") : "Theme"}
