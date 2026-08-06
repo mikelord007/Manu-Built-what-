@@ -6,6 +6,7 @@ import {
   getUpcomingReads,
   getCompletedBooks,
   getYearlyBookStats,
+  withResolvedMetadata,
 } from '@/lib/books'
 import ReadingCard from '@/components/ReadingCard'
 import BookCard from '@/components/BookCard'
@@ -19,8 +20,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function BooksPage() {
-  const books = getAllBooks()
+export default async function BooksPage() {
+  const books = await withResolvedMetadata(getAllBooks())
   const currentlyReading = getCurrentlyReading(books)
   const upcomingReads = getUpcomingReads(books)
   const completedBooks = getCompletedBooks(books)

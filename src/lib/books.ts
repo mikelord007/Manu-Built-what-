@@ -30,6 +30,54 @@ export interface YearlyBookStats {
   averageRating: number | null
 }
 
+interface OpenLibraryMeta {
+  cover?: string
+  pages?: number
+}
+
+async function fetchOpenLibraryMeta(title: string, author: string): Promise<OpenLibraryMeta> {
+  try {
+    const q = `title:"${title}" author:"${author}"`
+    const url = `https://openlibrary.org/search.json?${new URLSearchParams({
+      q,
+      fields: 'cover_i,number_of_pages_median',
+      limit: '1',
+    })}`
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'manu-built-what-portfolio/1.0 (manujasan23@gmail.com)' },
+      cache: 'force-cache',
+    })
+    if (!res.ok) return {}
+    const data = await res.json()
+    const doc = data?.docs?.[0]
+    if (!doc) return {}
+    return {
+      cover: typeof doc.cover_i === 'number' ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : undefined,
+      pages: typeof doc.number_of_pages_median === 'number' ? doc.number_of_pages_median : undefined,
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch Open Library metadata for "${title}"`, error)
+    return {}
+  }
+}
+
+// Covers and page counts are fetched automatically from Open Library so books
+// only need title/author/status in frontmatter. A manually set `cover` or
+// `pages` value in frontmatter always wins over the fetched one.
+export async function withResolvedMetadata(books: BookMeta[]): Promise<BookMeta[]> {
+  return Promise.all(
+    books.map(async book => {
+      if (book.cover && typeof book.pages === 'number') return book
+      const meta = await fetchOpenLibraryMeta(book.title, book.author)
+      return {
+        ...book,
+        cover: book.cover ?? meta.cover,
+        pages: book.pages ?? meta.pages,
+      }
+    })
+  )
+}
+
 export function getAllBooks(): BookMeta[] {
   if (!fs.existsSync(booksDir)) return []
   const files = fs.readdirSync(booksDir).filter(f => f.endsWith('.md'))
