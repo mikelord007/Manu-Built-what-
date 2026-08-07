@@ -6,6 +6,7 @@ import {
   getUpcomingReads,
   getCompletedBooks,
   getYearlyBookStats,
+  getCurrentYear,
   getFavoriteQuote,
   withResolvedMetadata,
 } from '@/lib/books'
@@ -26,7 +27,7 @@ export default async function BooksPage() {
   const currentlyReading = getCurrentlyReading(books)
   const upcomingReads = getUpcomingReads(books)
   const completedBooks = getCompletedBooks(books)
-  const stats = getYearlyBookStats(books, new Date().getFullYear())
+  const stats = getYearlyBookStats(books, await getCurrentYear())
   const favoriteQuote = getFavoriteQuote()
 
   return (

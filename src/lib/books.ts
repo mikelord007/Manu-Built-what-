@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { cacheLife } from 'next/cache'
 
 const booksDir = path.join(process.cwd(), 'content/books')
 const indexPath = path.join(booksDir, 'index.md')
@@ -46,7 +47,21 @@ interface BookProviderMeta {
   pages?: number
 }
 
+// Once a book is fully catalogued (cover + page count both resolved), that
+// data essentially never changes, so lock it in for a long time. But a book
+// with nothing (or only partial data) yet — e.g. an upcoming title Google
+// Books hasn't fully listed — is retried every few days instead, so a
+// cover that shows up later doesn't stay hidden for a month.
+function cacheLifeForResult(meta: BookProviderMeta) {
+  if (meta.cover && typeof meta.pages === 'number') {
+    cacheLife('max')
+  } else {
+    cacheLife('days')
+  }
+}
+
 async function fetchGoogleBooksMeta(title: string, author: string): Promise<BookProviderMeta> {
+  'use cache'
   try {
     const q = `intitle:"${title}" inauthor:"${author}"`
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY
@@ -56,30 +71,39 @@ async function fetchGoogleBooksMeta(title: string, author: string): Promise<Book
       ...(apiKey ? { key: apiKey } : {}),
     })}`
     const res = await fetch(url, { cache: 'force-cache' })
-    if (!res.ok) return {}
+    if (!res.ok) {
+      cacheLife('days')
+      return {}
+    }
     const data = await res.json()
     const item = data?.items?.[0]
     const info = item?.volumeInfo
-    if (!info) return {}
+    if (!info) {
+      cacheLife('days')
+      return {}
+    }
     // The `thumbnail`/`smallThumbnail` fields Google returns default to
     // zoom=1 (a ~130px preview) with a page-curl graphic baked into the
     // bottom-right corner. Rebuilding the URL with zoom=0 and edge=none
     // gets the full-resolution cover with no curl artifact.
     const hasCover = Boolean(info.imageLinks?.thumbnail ?? info.imageLinks?.smallThumbnail)
-    const cover = hasCover && item.id
-      ? `https://books.google.com/books/content?id=${item.id}&printsec=frontcover&img=1&zoom=0&edge=none&source=gbs_api`
-      : undefined
-    return {
-      cover,
+    const meta: BookProviderMeta = {
+      cover: hasCover && item.id
+        ? `https://books.google.com/books/content?id=${item.id}&printsec=frontcover&img=1&zoom=0&edge=none&source=gbs_api`
+        : undefined,
       pages: typeof info.pageCount === 'number' && info.pageCount > 0 ? info.pageCount : undefined,
     }
+    cacheLifeForResult(meta)
+    return meta
   } catch (error) {
+    cacheLife('days')
     console.warn(`Failed to fetch Google Books metadata for "${title}"`, error)
     return {}
   }
 }
 
 async function fetchOpenLibraryMeta(title: string, author: string): Promise<BookProviderMeta> {
+  'use cache'
   try {
     const q = `title:"${title}" author:"${author}"`
     const url = `https://openlibrary.org/search.json?${new URLSearchParams({
@@ -91,15 +115,24 @@ async function fetchOpenLibraryMeta(title: string, author: string): Promise<Book
       headers: { 'User-Agent': 'manu-built-what-portfolio/1.0 (manujasan23@gmail.com)' },
       cache: 'force-cache',
     })
-    if (!res.ok) return {}
+    if (!res.ok) {
+      cacheLife('days')
+      return {}
+    }
     const data = await res.json()
     const doc = data?.docs?.[0]
-    if (!doc) return {}
-    return {
+    if (!doc) {
+      cacheLife('days')
+      return {}
+    }
+    const meta: BookProviderMeta = {
       cover: typeof doc.cover_i === 'number' ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg` : undefined,
       pages: typeof doc.number_of_pages_median === 'number' ? doc.number_of_pages_median : undefined,
     }
+    cacheLifeForResult(meta)
+    return meta
   } catch (error) {
+    cacheLife('days')
     console.warn(`Failed to fetch Open Library metadata for "${title}"`, error)
     return {}
   }
@@ -212,6 +245,16 @@ export function getCompletedBooks(books: BookMeta[]): BookMeta[] {
   return books
     .filter(b => b.status === 'completed')
     .sort((a, b) => (a.finishedDate ?? '') < (b.finishedDate ?? '') ? 1 : -1)
+}
+
+// `new Date()` can't be read directly in a prerendered Server Component
+// (it'd freeze at build time). Caching it with a daily cacheLife keeps the
+// rest of the page statically cached while still rolling over correctly
+// on Jan 1.
+export async function getCurrentYear(): Promise<number> {
+  'use cache'
+  cacheLife('days')
+  return new Date().getFullYear()
 }
 
 export function getYearlyBookStats(books: BookMeta[], year: number): YearlyBookStats {
