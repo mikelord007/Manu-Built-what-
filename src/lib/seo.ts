@@ -3,7 +3,9 @@ import type { Metadata } from 'next'
 export const SITE_NAME = 'manu built what?'
 export const TWITTER_HANDLE = '@topagentmike007'
 
-const DEFAULT_IMAGE = '/images/og-default.svg'
+// Must be a raster format (png/jpg/webp/gif) — Twitter's card crawler does
+// not support SVG for twitter:image, so this can't be og-default.svg.
+const DEFAULT_IMAGE = '/images/og-default.png'
 
 interface BuildMetadataInput {
   title: string
