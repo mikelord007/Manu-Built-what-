@@ -68,6 +68,23 @@ export default async function BooksPage() {
 
         <section className="mb-16">
           <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
+            Completed
+          </h2>
+          {completedBooks.length === 0 ? (
+            <p className="font-mono text-sm text-(--muted)">
+              nothing finished yet — first one&apos;s still in progress.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {completedBooks.map(book => (
+                <BookCard key={book.slug} book={book} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section>
+          <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
             Upcoming Reads
           </h2>
           {upcomingReads.length === 0 ? (
@@ -76,23 +93,6 @@ export default async function BooksPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {upcomingReads.map(book => (
                 <ReadingCard key={book.slug} book={book} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section>
-          <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
-            Completed
-          </h2>
-          {completedBooks.length === 0 ? (
-            <p className="font-mono text-sm text-(--muted)">
-              nothing finished yet — first one&apos;s still in progress.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {completedBooks.map(book => (
-                <BookCard key={book.slug} book={book} />
               ))}
             </div>
           )}

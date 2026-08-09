@@ -29,7 +29,7 @@ export default function BookCard({ book, priority }: { book: BookMeta; priority?
             src={book.cover}
             alt={book.title}
             fill
-            sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
+            sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
             priority={priority}
             className="object-cover grayscale transition-[filter] duration-300 group-hover:grayscale-0"
           />
