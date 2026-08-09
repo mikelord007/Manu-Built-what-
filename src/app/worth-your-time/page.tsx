@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getAllLikes } from '@/lib/likes'
-import LikeRow from '@/components/LikeRow'
+import LikesFilter from '@/components/LikesFilter'
 
 export const metadata: Metadata = {
   title: 'Worth Your Time',
@@ -36,11 +36,7 @@ export default function WorthYourTimePage() {
         {items.length === 0 ? (
           <p className="font-mono text-sm text-(--muted)">nothing here yet.</p>
         ) : (
-          <div className="max-w-3xl border-t border-(--border)">
-            {items.map((item, i) => (
-              <LikeRow key={item.url} item={item} priority={i === 0} />
-            ))}
-          </div>
+          <LikesFilter items={items} />
         )}
       </div>
     </main>
