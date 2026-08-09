@@ -30,11 +30,27 @@ function formatProjectDate(dateString: string) {
   })
 }
 
+// remark-html escapes heading text as real HTML entities (e.g. "&" becomes
+// "&#x26;"), which a browser decodes fine when parsed via
+// dangerouslySetInnerHTML — but the sidebar nav renders `heading.title` as
+// a plain React text node, which never gets that decoding pass. Decode the
+// entities ourselves so the extracted plain text matches what's on screen.
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+}
+
 function toHeadingId(text: string) {
   return text
     .toLowerCase()
     .trim()
-    .replace(/&amp;/g, 'and')
+    .replace(/&/g, 'and')
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
 }
@@ -44,7 +60,7 @@ function addHeadingAnchors(contentHtml: string): { htmlWithIds: string; headings
   const headings: SectionHeading[] = []
 
   const htmlWithIds = contentHtml.replace(/<h2>(.*?)<\/h2>/g, (_match, innerHtml: string) => {
-    const plainText = innerHtml.replace(/<[^>]*>/g, '').trim()
+    const plainText = decodeHtmlEntities(innerHtml.replace(/<[^>]*>/g, '')).trim()
     if (!plainText) return `<h2>${innerHtml}</h2>`
 
     const baseId = toHeadingId(plainText) || 'section'
