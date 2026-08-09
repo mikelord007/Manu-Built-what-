@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import ThemeToggle from "@/components/ThemeToggle";
 import PostHogProvider from "@/components/PostHogProvider";
+import { buildMetadata } from "@/lib/seo";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -13,6 +14,17 @@ const geistMono = Geist_Mono({
 const siteName = "manu built what?";
 const siteDescription = "A build log of things Manu made in 2026.";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+// This is the fallback used only if some future page forgets to export its
+// own metadata. Every real page should call buildMetadata() from
+// @/lib/seo instead, so its OpenGraph/Twitter card reflects that page
+// rather than silently inheriting this generic one.
+const fallbackMetadata = buildMetadata({
+  title: siteName,
+  description: siteDescription,
+  path: "/",
+  isHome: true,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -36,27 +48,8 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  openGraph: {
-    type: "website",
-    siteName,
-    title: siteName,
-    description: siteDescription,
-    url: "/",
-    images: [
-      {
-        url: "/images/og-default.svg",
-        width: 1200,
-        height: 630,
-        alt: siteName,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteName,
-    description: siteDescription,
-    images: ["/images/og-default.svg"],
-  },
+  openGraph: fallbackMetadata.openGraph,
+  twitter: fallbackMetadata.twitter,
 };
 
 export default function RootLayout({

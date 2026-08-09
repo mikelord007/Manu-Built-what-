@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { buildMetadata } from '@/lib/seo'
 
 type SectionHeading = {
   id: string
@@ -83,38 +84,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   try {
     const project = await getProjectBySlug(slug)
-    const title = project.title
-    const description = project.description || `Project details for ${project.title}.`
-    const media = project.detailMedia ?? project.image
 
-    return {
-      title,
-      description,
-      alternates: {
-        canonical: `/projects/${project.slug}`,
-      },
-      openGraph: {
-        type: 'article',
-        title,
-        description,
-        url: `/projects/${project.slug}`,
-        ...(media ? { images: [{ url: media, alt: project.title }] } : {}),
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        ...(media ? { images: [media] } : {}),
-      },
-    }
+    // Social cards need a static image — detailMedia is often a video
+    // (.mp4/.webm) for the on-page hero, which Twitter/OG can't render as
+    // a preview image, so this always uses project.image instead.
+    return buildMetadata({
+      title: project.title,
+      description: project.description || `Project details for ${project.title}.`,
+      path: `/projects/${project.slug}`,
+      image: project.image,
+      type: 'article',
+    })
   } catch {
-    return {
+    return buildMetadata({
       title: 'Project not found',
-      robots: {
-        index: false,
-        follow: false,
-      },
-    }
+      description: 'This project does not exist.',
+      path: `/projects/${slug}`,
+      noIndex: true,
+    })
   }
 }
 

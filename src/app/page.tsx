@@ -1,12 +1,15 @@
 import Link from 'next/link'
 import { getAllProjects, getRecentProjectCutoff, isRecentProject } from '@/lib/projects'
 import ProjectsFilter from '@/components/ProjectsFilter'
+import { buildMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: { absolute: 'manu built what?' },
+export const metadata: Metadata = buildMetadata({
+  title: 'manu built what?',
   description: 'A collection of projects, experiments, and shipped builds by Manu.',
-}
+  path: '/',
+  isHome: true,
+})
 
 export default async function Home() {
   const projects = getAllProjects()

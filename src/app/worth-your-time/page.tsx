@@ -2,14 +2,13 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getAllLikes } from '@/lib/likes'
 import LikesFilter from '@/components/LikesFilter'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Worth Your Time',
   description: 'Writings, videos, and podcasts Manu recommends.',
-  alternates: {
-    canonical: '/worth-your-time',
-  },
-}
+  path: '/worth-your-time',
+})
 
 export default function WorthYourTimePage() {
   const items = getAllLikes()

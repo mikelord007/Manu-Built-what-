@@ -13,14 +13,13 @@ import {
 import ReadingCard from '@/components/ReadingCard'
 import BookCard from '@/components/BookCard'
 import BookStats from '@/components/BookStats'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Books',
   description: "What Manu is reading, plans to read, and has finished — with yearly stats.",
-  alternates: {
-    canonical: '/books',
-  },
-}
+  path: '/books',
+})
 
 export default async function BooksPage() {
   const books = await withResolvedMetadata(getAllBooks())
