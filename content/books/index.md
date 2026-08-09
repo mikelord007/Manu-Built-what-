@@ -30,7 +30,7 @@ books:
   - slug: project-hail-mary
     title: "Project Hail Mary"
     author: "Andy Weir"
-    status: reading
+    status: completed
 
   - slug: how-to-try-again
     title: "How to Try Again"
