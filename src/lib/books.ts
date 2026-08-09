@@ -200,6 +200,16 @@ export function getFavoriteQuote(): FavoriteQuote | null {
   }
 }
 
+// gray-matter's YAML parser turns a bare `startedDate: 2026-08-08` into a JS
+// Date object rather than a string, so a plain `String(value)` produces a
+// locale string ("Sat Aug 08 2026 ...") instead of an ISO date — breaking
+// the lexicographic date comparisons used to sort/filter books by date.
+function normalizeDate(value: unknown): string {
+  if (!value) return ''
+  if (value instanceof Date) return value.toISOString().slice(0, 10)
+  return String(value)
+}
+
 function readBookDetails(slug: string): Partial<BookMeta> {
   const fullPath = path.join(detailsDir, `${slug}.md`)
   if (!fs.existsSync(fullPath)) return {}
@@ -207,8 +217,8 @@ function readBookDetails(slug: string): Partial<BookMeta> {
     const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
     return {
       ...(data.cover ? { cover: data.cover } : {}),
-      ...(data.startedDate ? { startedDate: String(data.startedDate) } : {}),
-      ...(data.finishedDate ? { finishedDate: String(data.finishedDate) } : {}),
+      ...(data.startedDate ? { startedDate: normalizeDate(data.startedDate) } : {}),
+      ...(data.finishedDate ? { finishedDate: normalizeDate(data.finishedDate) } : {}),
       ...(typeof data.pages === 'number' ? { pages: data.pages } : {}),
       ...(typeof data.rating === 'number' ? { rating: data.rating } : {}),
       ...(data.summary ? { summary: data.summary } : {}),

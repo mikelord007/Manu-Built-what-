@@ -8,7 +8,15 @@ function formatProjectDate(date: string): string {
   return new Intl.DateTimeFormat('en-GB').format(parsed)
 }
 
-export default function ProjectCard({ project, priority }: { project: ProjectMeta; priority?: boolean }) {
+export default function ProjectCard({
+  project,
+  priority,
+  isNew,
+}: {
+  project: ProjectMeta
+  priority?: boolean
+  isNew?: boolean
+}) {
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -18,6 +26,11 @@ export default function ProjectCard({ project, priority }: { project: ProjectMet
         className={`relative w-full bg-(--fg) overflow-hidden shrink-0 ${project.imageAspect ? '' : 'aspect-video'}`}
         style={project.imageAspect ? { aspectRatio: project.imageAspect } : undefined}
       >
+        {isNew && (
+          <span className="absolute top-2 right-2 z-10 font-mono text-[10px] font-bold tracking-widest uppercase bg-(--fg) text-(--bg) px-2 py-1">
+            New
+          </span>
+        )}
         {project.image ? (
           <Image
             src={project.image}

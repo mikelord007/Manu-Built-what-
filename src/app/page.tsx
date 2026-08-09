@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllProjects } from '@/lib/projects'
+import { getAllProjects, getRecentProjectCutoff, isRecentProject } from '@/lib/projects'
 import ProjectCard from '@/components/ProjectCard'
 import type { Metadata } from 'next'
 
@@ -8,8 +8,9 @@ export const metadata: Metadata = {
   description: 'A collection of projects, experiments, and shipped builds by Manu.',
 }
 
-export default function Home() {
+export default async function Home() {
   const projects = getAllProjects()
+  const recentCutoff = await getRecentProjectCutoff()
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -66,7 +67,11 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {projects.map((p, i) => (
                 <div key={p.slug} className="border border-(--border)">
-                  <ProjectCard project={p} priority={i === 0} />
+                  <ProjectCard
+                    project={p}
+                    priority={i === 0}
+                    isNew={!!p.date && isRecentProject(p.date, recentCutoff)}
+                  />
                 </div>
               ))}
             </div>
