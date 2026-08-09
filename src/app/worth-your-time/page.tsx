@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getAllLikes } from '@/lib/likes'
-import LikeCard from '@/components/LikeCard'
+import LikeRow from '@/components/LikeRow'
 
 export const metadata: Metadata = {
   title: 'Worth Your Time',
@@ -36,9 +36,9 @@ export default function WorthYourTimePage() {
         {items.length === 0 ? (
           <p className="font-mono text-sm text-(--muted)">nothing here yet.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="max-w-3xl border-t border-(--border)">
             {items.map((item, i) => (
-              <LikeCard key={item.url} item={item} priority={i === 0} />
+              <LikeRow key={item.url} item={item} priority={i === 0} />
             ))}
           </div>
         )}
