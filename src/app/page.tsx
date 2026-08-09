@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getAllProjects, getRecentProjectCutoff, isRecentProject } from '@/lib/projects'
-import ProjectCard from '@/components/ProjectCard'
+import ProjectsFilter from '@/components/ProjectsFilter'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -27,14 +27,9 @@ export default async function Home() {
       />
       <div className="w-full max-w-5xl px-4 sm:px-6 pt-16 pb-24">
         <header className="mb-16 overflow-hidden">
-          <div className="flex flex-col items-center gap-2">
-            <h1 className="font-mono font-black text-center text-5xl sm:text-6xl md:text-7xl tracking-tight leading-none">
-              Manu Built What?
-            </h1>
-            <p className="font-mono italic text-sm -rotate-2 hover:-rotate-1 hover:-translate-y-1 transition-transform duration-300 cursor-default text-(--muted) tracking-wide text-center">
-              /* work in progress, more coming v soon */
-            </p>
-          </div>
+          <h1 className="font-mono font-black text-center text-5xl sm:text-6xl md:text-7xl tracking-tight leading-none">
+            Manu Built What?
+          </h1>
           <p className="font-mono text-xs mt-10 sm:mt-14 tracking-widest uppercase text-(--muted)">2026</p>
           <div className="flex items-start justify-between mt-6">
             <div className="flex items-center gap-4">
@@ -72,17 +67,12 @@ export default async function Home() {
           <p className="font-mono text-sm text-(--muted)">nothing yet.</p>
         ) : (
           <div className="border-t border-(--border) pt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {projects.map((p, i) => (
-                <div key={p.slug} className="border border-(--border)">
-                  <ProjectCard
-                    project={p}
-                    priority={i === 0}
-                    isNew={!!p.date && isRecentProject(p.date, recentCutoff)}
-                  />
-                </div>
-              ))}
-            </div>
+            <ProjectsFilter
+              projects={projects.map(p => ({
+                ...p,
+                isNew: !!p.date && isRecentProject(p.date, recentCutoff),
+              }))}
+            />
           </div>
         )}
       </div>

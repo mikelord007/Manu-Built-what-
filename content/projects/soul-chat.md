@@ -2,6 +2,7 @@
 title: "Soul Chat"
 description: "a peer-to-peer video chat app where getting matched with strangers who share your interests earns ERC-20 'Soul' tokens and NFTs — WebRTC video over SvelteKit, wallet connect via Web3Modal on Polygon Mumbai"
 date: 2023-02-02
+category: web3
 image: "/images/soul-chat.png"
 liveUrl: "https://soul-chat-mikelord007.vercel.app/"
 githubUrl: "https://github.com/mikelord007/Soul.chat"

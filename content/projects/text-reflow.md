@@ -2,6 +2,7 @@
 title: "Text ReFlow"
 description: "two interactive text reflow demos powered by @chenglou/pretext — a playable ping pong game where text wraps around the ball, and a webcam mode where your face and hands become live obstacles"
 date: 2026-03-30
+category: general
 image: "/images/text-reflow.png"
 detailMedia: "/videos/text-reflow.mp4"
 liveUrl: "https://text-reflow.vercel.app/"

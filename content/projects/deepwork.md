@@ -2,6 +2,7 @@
 title: "deepwork.ai"
 description: "a data-driven AI focus coach — it logs your Pomodoro sessions, distractions, and where you work, then a tool-calling LLM agent mines your real data to tell you when and where you actually focus best"
 date: 2026-07-18
+category: ai
 image: "/images/deepwork.png"
 liveUrl: "https://deepwork-ai.vercel.app/"
 githubUrl: "https://github.com/mikelord007/deepwork_ai"

@@ -2,6 +2,7 @@
 title: "Saarthi AI"
 description: "a voice-first Android agent for Indian languages that narrates any screen and can take over multi-step tasks — Claude-powered tool calls over the accessibility tree, streaming Sarvam STT and Maya TTS across 10 languages, and a dedicated guard that hands control back before anything irreversible"
 date: 2026-08-08
+category: ai
 image: "/images/saarthi-ai.png"
 imageAspect: "4/5"
 detailMedia: "/videos/saarthi-ai.webm"

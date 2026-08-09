@@ -8,11 +8,14 @@ import { cacheLife } from 'next/cache'
 const projectsDir = path.join(process.cwd(), 'content/projects')
 const NEW_PROJECT_WINDOW_DAYS = 30
 
+export type ProjectCategory = 'ai' | 'web3' | 'general'
+
 export interface ProjectMeta {
   slug: string
   title: string
   description: string
   date: string
+  category: ProjectCategory
   image?: string
   imageAspect?: string
   detailMedia?: string
@@ -49,6 +52,9 @@ export function getAllProjects(): ProjectMeta[] {
           title: data.title ?? slug,
           description: data.description ?? '',
           date: normalizeDate(data.date),
+          category: ['ai', 'web3', 'general'].includes(data.category as string)
+            ? (data.category as ProjectCategory)
+            : 'general',
           ...(data.image ? { image: data.image } : {}),
           ...(data.imageAspect ? { imageAspect: data.imageAspect } : {}),
           ...(data.detailMedia ? { detailMedia: data.detailMedia } : {}),
@@ -92,6 +98,9 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     title: data.title ?? slug,
     description: data.description ?? '',
     date: normalizeDate(data.date),
+    category: ['ai', 'web3', 'general'].includes(data.category as string)
+      ? (data.category as ProjectCategory)
+      : 'general',
     image: data.image,
     imageAspect: data.imageAspect,
     detailMedia: data.detailMedia,

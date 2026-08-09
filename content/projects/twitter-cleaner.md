@@ -2,6 +2,7 @@
 title: "twtr-cleaner"
 description: "a CLI that deletes your entire X/Twitter history — tweets, replies, retweets, quotes, and likes — by driving a real Playwright browser against your downloaded data archive, with optional LLM content filtering and resumable, rate-limited runs"
 date: 2026-07-12
+category: general
 image: "/images/twitter-cleaner.png"
 githubUrl: "https://github.com/mikelord007/twitter-cleaner"
 ---

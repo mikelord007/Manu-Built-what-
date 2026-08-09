@@ -2,6 +2,7 @@
 title: "RawPulse"
 description: "an Android app that reads a WHOOP band's Bluetooth heart-rate broadcast directly and pushes live BPM, HRV, and zone data to home-screen widgets roughly once a second — real-time data the official WHOOP app and API don't expose"
 date: 2026-07-24
+category: general
 image: "/images/rawpulse-detail.jpg"
 imageAspect: "718/897"
 detailMedia: "/images/rawpulse.jpg"

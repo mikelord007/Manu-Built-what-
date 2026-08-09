@@ -2,6 +2,7 @@
 title: "Fluid Finance"
 description: "a lending/borrowing and options-based liquidity-mining protocol pair written in Cadence for Flow, where every position is an owned resource — collateral buckets check under-collateralization before every borrow or withdrawal, and staking rewards mint as redeemable, time-limited option tokens instead of a plain emission"
 date: 2023-10-07
+category: web3
 image: "/images/fluid-finance.png"
 githubUrl: "https://github.com/mikelord007/fluid-finance"
 ---

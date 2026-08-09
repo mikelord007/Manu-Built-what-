@@ -2,6 +2,7 @@
 title: "GuardRail TEE"
 description: "an AWS Nitro Enclave server, built on Sui's Nautilus framework, that loads a language model, runs it through a safety-scoring test suite, and produces a signed PDF report — so an AI safety evaluation is cryptographically attestable on-chain instead of taken on faith"
 date: 2025-11-23
+category: web3
 image: "/images/guardrail-tee.png"
 githubUrl: "https://github.com/mikelord007/GuardRail-TEE"
 ---
