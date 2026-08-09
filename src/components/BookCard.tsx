@@ -8,11 +8,13 @@ function formatBookDate(date: string): string {
 }
 
 function Stars({ rating }: { rating: number }) {
-  const filled = Math.round(rating)
+  const pct = Math.min(100, Math.max(0, (rating / 5) * 100))
   return (
-    <span className="font-mono text-sm tracking-wider" aria-label={`${rating} out of 5`}>
-      {'★'.repeat(filled)}
-      <span className="text-(--muted)">{'★'.repeat(Math.max(0, 5 - filled))}</span>
+    <span className="font-mono text-sm tracking-wider inline-flex items-center" aria-label={`${rating} out of 5`}>
+      <span className="relative inline-block">
+        <span className="text-(--muted)">★★★★★</span>
+        <span className="absolute inset-0 overflow-hidden whitespace-nowrap" style={{ width: `${pct}%` }}>★★★★★</span>
+      </span>
       <span className="ml-2 text-xs text-(--muted)">{rating}/5</span>
     </span>
   )
