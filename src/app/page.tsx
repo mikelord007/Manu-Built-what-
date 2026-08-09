@@ -51,12 +51,20 @@ export default async function Home() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
               </a>
             </div>
-            <Link
-              href="/books"
-              className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
-            >
-              [ Books I&apos;m Reading ]
-            </Link>
+            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
+              <Link
+                href="/worth-your-time"
+                className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
+              >
+                [ Worth Your Time ]
+              </Link>
+              <Link
+                href="/books"
+                className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
+              >
+                [ Books I&apos;m Reading ]
+              </Link>
+            </div>
           </div>
         </header>
 
