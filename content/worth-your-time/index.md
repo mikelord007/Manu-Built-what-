@@ -55,11 +55,4 @@ items:
     type: video
     thumbnail: "https://i.ytimg.com/vi/jiHZqamCD8c/hqdefault.jpg"
     note: "Steve Jobs's commencement speech."
-
-  - title: "2024 Commencement Address by Roger Federer at Dartmouth"
-    author: "Dartmouth"
-    url: "https://www.youtube.com/watch?v=pqWUuYTcG-o"
-    type: video
-    thumbnail: "https://i.ytimg.com/vi/pqWUuYTcG-o/hqdefault.jpg"
-    note: "Roger Federer's commencement address."
 ---

@@ -36,7 +36,7 @@ export default async function Home() {
             </p>
           </div>
           <p className="font-mono text-xs mt-10 sm:mt-14 tracking-widest uppercase text-(--muted)">2026</p>
-          <div className="flex items-center justify-between mt-6">
+          <div className="flex items-start justify-between mt-6">
             <div className="flex items-center gap-4">
               <a href="https://x.com/topagentmike007" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="text-(--muted) hover:text-(--fg) transition-colors">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -51,18 +51,18 @@ export default async function Home() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
               </a>
             </div>
-            <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
-              <Link
-                href="/worth-your-time"
-                className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
-              >
-                [ Worth Your Time ]
-              </Link>
+            <div className="flex flex-col items-end gap-2">
               <Link
                 href="/books"
                 className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
               >
                 [ Books I&apos;m Reading ]
+              </Link>
+              <Link
+                href="/worth-your-time"
+                className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
+              >
+                [ Worth Your Time ]
               </Link>
             </div>
           </div>

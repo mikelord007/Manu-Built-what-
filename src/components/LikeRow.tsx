@@ -40,11 +40,16 @@ export default function LikeRow({ item, priority }: { item: LikeItem; priority?:
             {item.type}
           </span>
         </div>
-        <p className="font-mono text-xs leading-relaxed text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">
-          {item.author}
-          {item.author && item.note ? ' — ' : ''}
-          {item.note}
-        </p>
+        {item.note && (
+          <p className="font-mono text-xs leading-relaxed text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">
+            {item.note}
+          </p>
+        )}
+        {item.author && (
+          <p className="font-mono text-xs text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">
+            {item.author}
+          </p>
+        )}
         <p className="ml-auto font-mono text-[10px] text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-50">
           [ {TYPE_LABEL[item.type]} ↗ ]
         </p>
