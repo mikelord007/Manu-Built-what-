@@ -3,6 +3,21 @@ import type { Metadata } from 'next'
 export const SITE_NAME = 'manu built what?'
 export const TWITTER_HANDLE = '@topagentmike007'
 
+// The canonical absolute origin for this deployment. Always resolves to a
+// real https:// URL when actually deployed on Vercel — VERCEL_PROJECT_PRODUCTION_URL
+// (the assigned production domain, custom domain if set) and VERCEL_URL
+// (this deployment's own domain) are both auto-injected by Vercel, no
+// dashboard config required. NEXT_PUBLIC_SITE_URL still wins if set
+// explicitly. Only bare `npm run dev` with none of this set falls back to
+// localhost — that's the *only* case this should ever resolve to http.
+// Twitter/X's card crawler can't reach localhost or fetch http images, so
+// getting this wrong silently breaks every social card in production.
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined) ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ??
+  'http://localhost:3000'
+
 // Must be a raster format (png/jpg/webp/gif) — Twitter's card crawler does
 // not support SVG for twitter:image, so this can't be og-default.svg.
 const DEFAULT_IMAGE = '/images/og-default.png'

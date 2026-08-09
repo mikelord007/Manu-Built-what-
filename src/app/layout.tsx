@@ -3,7 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import ThemeToggle from "@/components/ThemeToggle";
 import PostHogProvider from "@/components/PostHogProvider";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -13,7 +13,6 @@ const geistMono = Geist_Mono({
 
 const siteName = "manu built what?";
 const siteDescription = "A build log of things Manu made in 2026.";
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 // This is the fallback used only if some future page forgets to export its
 // own metadata. Every real page should call buildMetadata() from
@@ -27,7 +26,7 @@ const fallbackMetadata = buildMetadata({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: siteName,
     template: `%s | ${siteName}`,

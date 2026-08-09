@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { buildMetadata } from '@/lib/seo'
+import { buildMetadata, SITE_URL } from '@/lib/seo'
 
 type SectionHeading = {
   id: string
@@ -122,7 +122,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     name: project.title,
     description: project.description || undefined,
     datePublished: project.date || undefined,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/projects/${project.slug}`,
+    url: `${SITE_URL}/projects/${project.slug}`,
   }
 
   return (

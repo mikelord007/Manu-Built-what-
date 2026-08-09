@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getAllProjects, getRecentProjectCutoff, isRecentProject } from '@/lib/projects'
 import ProjectsFilter from '@/components/ProjectsFilter'
-import { buildMetadata } from '@/lib/seo'
+import { buildMetadata, SITE_URL } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = buildMetadata({
@@ -18,7 +18,7 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'manu built what?',
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+    url: SITE_URL,
     description: 'A collection of projects, experiments, and shipped builds by Manu.',
   }
 

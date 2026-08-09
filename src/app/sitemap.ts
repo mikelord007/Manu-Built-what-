@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { getAllProjects } from '@/lib/projects'
+import { SITE_URL } from '@/lib/seo'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const baseUrl = SITE_URL
   const projects = getAllProjects()
 
   return [
