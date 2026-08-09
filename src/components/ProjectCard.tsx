@@ -26,11 +26,6 @@ export default function ProjectCard({
         className={`relative w-full bg-(--fg) overflow-hidden shrink-0 ${project.imageAspect ? '' : 'aspect-video'}`}
         style={project.imageAspect ? { aspectRatio: project.imageAspect } : undefined}
       >
-        {isNew && (
-          <span className="absolute top-2 right-2 z-10 font-mono text-[10px] font-bold tracking-widest uppercase bg-(--fg) text-(--bg) px-2 py-1">
-            New
-          </span>
-        )}
         {project.image ? (
           <Image
             src={project.image}
@@ -49,7 +44,14 @@ export default function ProjectCard({
         )}
       </div>
       <div className="p-5 flex flex-1 flex-col gap-1">
-        <h2 className="font-mono font-bold text-sm leading-snug">{project.title}</h2>
+        <div className="flex items-baseline justify-between gap-2">
+          <h2 className="font-mono font-bold text-sm leading-snug">{project.title}</h2>
+          {isNew && (
+            <span className="shrink-0 font-mono text-[10px] font-bold tracking-widest uppercase border border-(--border) px-1.5 py-0.5 text-(--muted) group-hover:text-(--card-hover-fg) group-hover:border-(--card-hover-fg)">
+              New
+            </span>
+          )}
+        </div>
         <p className="font-mono text-xs text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">{project.description}</p>
         {project.date && (
           <p className="mt-auto ml-auto font-mono text-[10px] text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-50">
