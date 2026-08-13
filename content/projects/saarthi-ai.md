@@ -10,9 +10,7 @@ detailAspect: "9/20"
 githubUrl: "https://github.com/mikelord007/Saarthi-AI"
 ---
 
-Saarthi ("charioteer, guide" in Hindi) is the next iteration of the same idea behind an earlier hackathon project of mine — a voice-first Android accessibility agent for people who find a phone screen hard to parse — rebuilt from scratch with a real agent loop and a native-Claude reasoning core, in Indian languages, on-device speech throughout.
-
-35 commits landed in the first two days.
+Saarthi ("charioteer, guide" in Hindi) is a voice-first Android accessibility agent for people who find a phone screen hard to parse, built from scratch with a real agent loop and a native-Claude reasoning core, in Indian languages, on-device speech throughout.
 
 ---
 
