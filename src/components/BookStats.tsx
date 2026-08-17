@@ -4,7 +4,7 @@ const MONTH_LABELS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'
 
 function StatTile({ label, value, note }: { label: string; value: string | number; note?: string }) {
   return (
-    <div className="border border-(--border) p-4 flex flex-col gap-1">
+    <div className="border border-(--border) bg-(--bg) p-4 flex flex-col gap-1">
       <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted)">{label}</p>
       <p className="font-mono font-black text-3xl leading-none">{value}</p>
       {note && <p className="font-mono text-[10px] text-(--muted)">{note}</p>}
@@ -17,7 +17,7 @@ function QuoteTile({ quote }: { quote: FavoriteQuote }) {
   const attribution = [name, quote.book].filter(Boolean).join(', ')
 
   return (
-    <div className="border border-(--border) p-4 flex flex-col gap-1" title={quote.text}>
+    <div className="border border-(--border) bg-(--bg) p-4 flex flex-col gap-1" title={quote.text}>
       <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted)">Favorite Quote</p>
       <p className="font-mono italic text-sm leading-snug line-clamp-3">&ldquo;{quote.text}&rdquo;</p>
       {attribution && <p className="font-mono text-[10px] text-(--muted) truncate">— {attribution}</p>}
@@ -64,7 +64,7 @@ export default function BookStats({
         <StatTile label="Total pages read" value={stats.totalPages.toLocaleString()} />
         {favoriteQuote && <QuoteTile quote={favoriteQuote} />}
       </div>
-      <div className="border border-(--border) p-4">
+      <div className="border border-(--border) bg-(--bg) p-4">
         <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted) mb-3">
           Books per month
         </p>
