@@ -41,7 +41,7 @@ export default function BookCard({ book, priority }: { book: BookMeta; priority?
           </div>
         )}
       </div>
-      <div className="p-5 flex flex-1 flex-col gap-3">
+      <div className="p-5 flex flex-1 flex-col gap-3 bg-(--bg)">
         <div>
           <h3 className="font-mono font-bold text-sm leading-snug">{book.title}</h3>
           <p className="font-mono text-xs text-(--muted)">{book.author}</p>
