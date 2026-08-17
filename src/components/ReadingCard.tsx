@@ -28,7 +28,7 @@ export default function ReadingCard({ book, priority }: { book: BookMeta; priori
           </div>
         )}
       </div>
-      <div className="p-4 flex flex-1 flex-col gap-1">
+      <div className="p-4 flex flex-1 flex-col gap-1 bg-(--bg)">
         <h3 className="font-mono font-bold text-sm leading-snug">{book.title}</h3>
         <p className="font-mono text-xs text-(--muted)">{book.author}</p>
         {book.startedDate && (
