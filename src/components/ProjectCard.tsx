@@ -43,7 +43,7 @@ export default function ProjectCard({
           </div>
         )}
       </div>
-      <div className="p-5 flex flex-1 flex-col gap-1">
+      <div className="p-5 flex flex-1 flex-col gap-1 bg-(--bg) transition-colors group-hover:bg-(--card-hover-bg)">
         <div className="flex items-baseline justify-between gap-2">
           <h2 className="font-mono font-bold text-sm leading-snug">{project.title}</h2>
           {isNew && (
