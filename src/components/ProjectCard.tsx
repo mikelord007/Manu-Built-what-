@@ -22,6 +22,7 @@ export default function ProjectCard({
       href={`/projects/${project.slug}`}
       className="group flex h-full flex-col transition-colors hover:bg-(--card-hover-bg) hover:text-(--card-hover-fg)"
       data-cuelume-hover="tick"
+      data-cuelume-toggle
     >
       <div
         className={`relative w-full bg-(--fg) overflow-hidden shrink-0 ${project.imageAspect ? '' : 'aspect-video'}`}

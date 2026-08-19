@@ -138,6 +138,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               href="/"
               className="font-mono text-xs tracking-widest uppercase underline mb-10 block text-(--muted) hover:text-(--fg)"
               data-cuelume-hover="tick"
+              data-cuelume-toggle
             >
               ← back
             </Link>
@@ -192,6 +193,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     rel="noopener noreferrer"
                     className="font-mono text-sm underline hover:no-underline"
                     data-cuelume-hover="tick"
+                    data-cuelume-toggle
                   >
                     [ Live Site ↗ ]
                   </a>
@@ -203,6 +205,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     rel="noopener noreferrer"
                     className="font-mono text-sm underline hover:no-underline"
                     data-cuelume-hover="tick"
+                    data-cuelume-toggle
                   >
                     [ GitHub ↗ ]
                   </a>
@@ -227,6 +230,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         href={`#${heading.id}`}
                         className="font-mono text-xs tracking-wide uppercase text-(--muted-strong) hover:text-(--fg)"
                         data-cuelume-hover="tick"
+                        data-cuelume-toggle
                       >
                         {heading.title}
                       </a>

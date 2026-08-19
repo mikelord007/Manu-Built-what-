@@ -76,6 +76,8 @@ export default function NotFound() {
               key={r.href}
               href={r.href}
               className="group flex flex-col gap-3 border border-(--border) p-5 transition-colors hover:bg-(--card-hover-bg) hover:text-(--card-hover-fg)"
+              data-cuelume-hover="tick"
+              data-cuelume-toggle
             >
               <div>
                 <p className="font-mono text-xs text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">{r.n}</p>

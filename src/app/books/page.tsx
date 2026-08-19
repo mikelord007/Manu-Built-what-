@@ -36,6 +36,7 @@ export default async function BooksPage() {
           href="/"
           className="font-mono text-xs tracking-widest uppercase underline mb-10 block text-(--muted) hover:text-(--fg)"
           data-cuelume-hover="tick"
+          data-cuelume-toggle
         >
           ← back
         </Link>
