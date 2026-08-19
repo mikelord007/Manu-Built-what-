@@ -35,6 +35,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       className="absolute sm:fixed right-4 top-4 z-50 border px-3 py-1 text-xs uppercase tracking-widest transition-colors bg-(--bg) text-(--fg) border-(--border) hover:bg-(--fg) hover:text-(--bg)"
       aria-label="Toggle dark mode"
+      data-cuelume-toggle
     >
       {mounted ? (theme === "dark" ? "Light" : "Dark") : "Theme"}
     </button>

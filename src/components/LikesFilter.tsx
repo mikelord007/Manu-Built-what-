@@ -26,6 +26,7 @@ export default function LikesFilter({ items }: { items: LikeItem[] }) {
             type="button"
             onClick={() => setFilter(f.key)}
             aria-pressed={filter === f.key}
+            data-cuelume-toggle
             className={`font-mono text-xs tracking-widest uppercase border px-3 py-1 transition-colors ${
               filter === f.key
                 ? 'bg-(--fg) text-(--bg) border-(--fg)'

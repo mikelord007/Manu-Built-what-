@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "cuelume": "^0.2.2",
     "gray-matter": "^4.0.3",
     "next": "16.2.1",
     "posthog-js": "^1.364.3",

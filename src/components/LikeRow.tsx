@@ -14,6 +14,7 @@ export default function LikeRow({ item, priority }: { item: LikeItem; priority?:
       target="_blank"
       rel="noopener noreferrer"
       className="group flex gap-4 sm:gap-5 py-5 px-2 -mx-2 border-b border-(--border) transition-colors hover:bg-(--card-hover-bg) hover:text-(--card-hover-fg)"
+      data-cuelume-hover="tick"
     >
       <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-(--fg) overflow-hidden">
         {item.thumbnail ? (

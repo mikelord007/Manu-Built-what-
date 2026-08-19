@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import ThemeToggle from "@/components/ThemeToggle";
 import PostHogProvider from "@/components/PostHogProvider";
+import SoundProvider from "@/components/SoundProvider";
 import { buildMetadata, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -74,8 +75,10 @@ export default function RootLayout({
           }}
         />
         <PostHogProvider>
-          <ThemeToggle />
-          {children}
+          <SoundProvider>
+            <ThemeToggle />
+            {children}
+          </SoundProvider>
         </PostHogProvider>
       </body>
     </html>
