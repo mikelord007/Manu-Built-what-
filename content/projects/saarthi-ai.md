@@ -1,6 +1,6 @@
 ---
 title: "Saarthi AI"
-description: "a voice-first Android agent for Indian languages that narrates any screen and can take over multi-step tasks — Claude-powered tool calls over the accessibility tree, streaming Sarvam STT and Maya TTS across 10 languages, and a dedicated guard that hands control back before anything irreversible"
+description: "a voice-first Android agent for Indian languages that narrates any screen and can take over multi-step tasks: Claude-powered tool calls over the accessibility tree, streaming Sarvam STT and Maya TTS across 10 languages, and a dedicated guard that hands control back before anything irreversible"
 date: 2026-08-08
 category: ai
 image: "/images/saarthi-ai.png"
@@ -10,7 +10,7 @@ detailAspect: "9/20"
 githubUrl: "https://github.com/mikelord007/Saarthi-AI"
 ---
 
-Saarthi ("charioteer, guide" in Hindi) is a voice assistant for Android, built for people who find a phone screen hard to read or navigate. Say what you want — "open WhatsApp and message Amma," "what's on this screen" — and it narrates what's there and taps through the steps itself, in your choice of 10 Indian languages, checking back with you before doing anything that can't be undone.
+Saarthi ("charioteer, guide" in Hindi) is a voice assistant for Android, built for people who find a phone screen hard to read or navigate. Say things like "open WhatsApp and message Amma" or "what's on this screen," and it narrates what's there and taps through the steps itself, in your choice of 10 Indian languages, checking back with you before doing anything that can't be undone.
 
 ---
 
@@ -22,26 +22,26 @@ Saarthi ("charioteer, guide" in Hindi) is a voice assistant for Android, built f
 
 ## Perception and the safety guard
 
-`ScreenPerception` reads the current screen through `SaarthiAccessibilityService` — no vision model, no screenshots, same grounding approach as Handrail. `ActionExecutor` carries out the chosen tool call, and `IrreversibleActionGuard` sits in front of every tap, checking the target node before it fires and handing back to the user instead of completing anything that looks irreversible.
+`ScreenPerception` reads the current screen through `SaarthiAccessibilityService` (no vision model, no screenshots), the same grounding approach as Handrail. `ActionExecutor` carries out the chosen tool call, and `IrreversibleActionGuard` sits in front of every tap, checking the target node before it fires and handing back to the user instead of completing anything that looks irreversible.
 
 `LoginWallDetector` catches a specific failure mode directly: the agent tapping a web-search result *about* an app instead of opening the app itself.
 
 ## Speech
 
-- **`SarvamStreamingStt`** — streaming speech-to-text with VAD auto-stop, so recording ends on its own instead of waiting for a fixed timeout
-- **`MayaTts`** — streaming text-to-speech for narration, switched over from an earlier Sarvam-TTS integration once Maya's streaming endpoint held up better in practice
+- **`SarvamStreamingStt`**: streaming speech-to-text with VAD auto-stop, so recording ends on its own instead of waiting for a fixed timeout
+- **`MayaTts`**: streaming text-to-speech for narration, switched over from an earlier Sarvam-TTS integration once Maya's streaming endpoint held up better in practice
 - The app is localized into **10 languages**, with real voice samples wired into the onboarding voice picker so you hear the actual voice before picking it
 
 ## Interface
 
-A translucent assist overlay (long-press home — a real `ASSIST` intent handler, same as Handrail) plus a full app shell: onboarding, home, conversation history and threads, settings, and a dedicated hand-back screen for when the guard stops a task.
+A translucent assist overlay (long-press home, backed by a real `ASSIST` intent handler, same as Handrail) plus a full app shell: onboarding, home, conversation history and threads, settings, and a dedicated hand-back screen for when the guard stops a task.
 
 ---
 
 ## Stack
 
 - **Kotlin**, native Android, Jetpack Compose
-- **AccessibilityService** perception layer — no vision, no screenshots
+- **AccessibilityService** perception layer: no vision, no screenshots
 - **Claude Haiku 4.5** (`ClaudeClient`) for routing and the agent loop
 - **Sarvam** streaming STT, **Maya** streaming TTS
 - Local on-device chat history store, no backend

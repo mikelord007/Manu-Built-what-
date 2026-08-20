@@ -17,7 +17,7 @@ import { buildMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
   title: 'Books',
-  description: "What Manu is reading, plans to read, and has finished — with yearly stats.",
+  description: "What Manu is reading, plans to read, and has finished, plus yearly stats.",
   path: '/books',
 })
 
@@ -73,7 +73,7 @@ export default async function BooksPage() {
           </h2>
           {completedBooks.length === 0 ? (
             <p className="font-mono text-sm text-(--muted)">
-              nothing finished yet — first one&apos;s still in progress.
+              nothing finished yet, first one&apos;s still in progress.
             </p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

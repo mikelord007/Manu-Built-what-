@@ -1,14 +1,15 @@
 ---
 title: "Soul Chat"
-description: "a peer-to-peer video chat app where getting matched with strangers who share your interests earns ERC-20 'Soul' tokens and NFTs — WebRTC video over SvelteKit, wallet connect via Web3Modal on Polygon Mumbai"
+description: "a peer-to-peer video chat app where getting matched with strangers who share your interests earns ERC-20 'Soul' tokens and NFTs: WebRTC video over SvelteKit, wallet connect via Web3Modal on Polygon Mumbai"
 date: 2023-02-02
 category: web3
 image: "/images/soul-chat.png"
 liveUrl: "https://soul-chat-mikelord007.vercel.app/"
 githubUrl: "https://github.com/mikelord007/Soul.chat"
+winner: true
 ---
 
-Omegle-style random video chat, but matching is steered by shared interests you type in up front, and the app itself has a stake in whether the conversation goes well — reward tokens for a good match, not just a video feed.
+Omegle-style random video chat, but matching is steered by shared interests you type in up front, and the app itself has a stake in whether the conversation goes well: reward tokens for a good match, not just a video feed.
 
 ---
 
@@ -18,7 +19,7 @@ You list your interests and land in a peer-to-peer video call. A **"Reap Soul"**
 
 ## Video
 
-Calls run over **WebRTC** via `simple-peer`, with **Socket.IO** handling the signaling exchange between peers to establish the connection — no video ever passes through a central server once the call is live.
+Calls run over **WebRTC** via `simple-peer`, with **Socket.IO** handling the signaling exchange between peers to establish the connection; no video ever passes through a central server once the call is live.
 
 ## Wallet and chain
 

@@ -20,7 +20,7 @@ function QuoteTile({ quote }: { quote: FavoriteQuote }) {
     <div className="border border-(--border) bg-(--bg) p-4 flex flex-col gap-1" title={quote.text}>
       <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted)">Favorite Quote</p>
       <p className="font-mono italic text-sm leading-snug line-clamp-3">&ldquo;{quote.text}&rdquo;</p>
-      {attribution && <p className="font-mono text-[10px] text-(--muted) truncate">— {attribution}</p>}
+      {attribution && <p className="font-mono text-[10px] text-(--muted) truncate">- {attribution}</p>}
     </div>
   )
 }
@@ -57,7 +57,7 @@ export default function BookStats({
   return (
     <section className="mb-16">
       <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
-        Reading Stats — {stats.year}
+        Reading Stats ({stats.year})
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <StatTile label="Completed this year" value={stats.completedCount} />
@@ -71,7 +71,7 @@ export default function BookStats({
         <MonthBars data={stats.booksPerMonth} />
         {!hasAnyCompleted && (
           <p className="font-mono text-[10px] text-(--muted) mt-3">
-            nothing finished yet this year — first one&apos;s in progress
+            nothing finished yet this year, first one&apos;s in progress
           </p>
         )}
       </div>
