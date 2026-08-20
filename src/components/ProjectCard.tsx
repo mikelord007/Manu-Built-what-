@@ -48,11 +48,18 @@ export default function ProjectCard({
       <div className="p-5 flex flex-1 flex-col gap-1 bg-(--bg) transition-colors group-hover:bg-(--card-hover-bg)">
         <div className="flex items-baseline justify-between gap-2">
           <h2 className="font-mono font-bold text-sm leading-snug">{project.title}</h2>
-          {isNew && (
-            <span className="shrink-0 font-mono text-[10px] font-bold tracking-widest uppercase border border-(--border) px-1.5 py-0.5 text-(--muted) group-hover:text-(--card-hover-fg) group-hover:border-(--card-hover-fg)">
-              New
-            </span>
-          )}
+          <div className="flex shrink-0 gap-1">
+            {project.winner && (
+              <span className="font-mono text-[10px] font-bold tracking-widest uppercase border border-(--border) px-1.5 py-0.5 text-(--muted) group-hover:text-(--card-hover-fg) group-hover:border-(--card-hover-fg)">
+                Winner
+              </span>
+            )}
+            {isNew && (
+              <span className="font-mono text-[10px] font-bold tracking-widest uppercase border border-(--border) px-1.5 py-0.5 text-(--muted) group-hover:text-(--card-hover-fg) group-hover:border-(--card-hover-fg)">
+                New
+              </span>
+            )}
+          </div>
         </div>
         <p className="font-mono text-xs text-(--muted) group-hover:text-(--card-hover-fg) group-hover:opacity-70">{project.description}</p>
         {project.date && (

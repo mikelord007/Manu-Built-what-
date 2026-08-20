@@ -22,6 +22,7 @@ export interface ProjectMeta {
   detailAspect?: string
   liveUrl?: string
   githubUrl?: string
+  winner?: boolean
 }
 
 export interface Project extends ProjectMeta {
@@ -61,6 +62,7 @@ export function getAllProjects(): ProjectMeta[] {
           ...(data.detailAspect ? { detailAspect: data.detailAspect } : {}),
           ...(data.liveUrl ? { liveUrl: data.liveUrl } : {}),
           ...(data.githubUrl ? { githubUrl: data.githubUrl } : {}),
+          ...(data.winner ? { winner: true } : {}),
         }
       } catch (error) {
         console.warn(`Skipping invalid project file: ${filename}`, error)
@@ -107,6 +109,7 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     detailAspect: data.detailAspect,
     liveUrl: data.liveUrl,
     githubUrl: data.githubUrl,
+    winner: data.winner === true,
     contentHtml: processed.toString(),
   }
 }

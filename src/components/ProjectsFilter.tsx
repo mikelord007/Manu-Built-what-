@@ -4,13 +4,14 @@ import { useState } from 'react'
 import type { ProjectMeta, ProjectCategory } from '@/lib/projects'
 import ProjectCard from './ProjectCard'
 
-type Filter = 'all' | ProjectCategory
+type Filter = 'all' | ProjectCategory | 'winners'
 
 const FILTERS: { key: Filter; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'ai', label: 'AI' },
   { key: 'web3', label: 'Web3' },
   { key: 'general', label: 'General' },
+  { key: 'winners', label: 'Winners' },
 ]
 
 interface ProjectWithNew extends ProjectMeta {
@@ -19,7 +20,12 @@ interface ProjectWithNew extends ProjectMeta {
 
 export default function ProjectsFilter({ projects }: { projects: ProjectWithNew[] }) {
   const [filter, setFilter] = useState<Filter>('all')
-  const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter)
+  const filtered =
+    filter === 'all'
+      ? projects
+      : filter === 'winners'
+        ? projects.filter(p => p.winner)
+        : projects.filter(p => p.category === filter)
 
   return (
     <div>
