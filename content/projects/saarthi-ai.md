@@ -10,7 +10,7 @@ detailAspect: "9/20"
 githubUrl: "https://github.com/mikelord007/Saarthi-AI"
 ---
 
-Saarthi ("charioteer, guide" in Hindi) is a voice-first Android accessibility agent for people who find a phone screen hard to parse, built from scratch with a real agent loop and a native-Claude reasoning core, in Indian languages, on-device speech throughout.
+Saarthi ("charioteer, guide" in Hindi) is a voice assistant for Android, built for people who find a phone screen hard to read or navigate. Say what you want — "open WhatsApp and message Amma," "what's on this screen" — and it narrates what's there and taps through the steps itself, in your choice of 10 Indian languages, checking back with you before doing anything that can't be undone.
 
 ---
 

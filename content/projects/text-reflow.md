@@ -9,7 +9,7 @@ liveUrl: "https://text-reflow.vercel.app/"
 githubUrl: "https://github.com/mikelord007/text-reflow"
 ---
 
-It started with one question: what if text weren't a static block, but a material that **moved around things** — the way water finds its way around a stone?
+Text ReFlow is two playable demos built around one idea: what if text weren't a static block, but a material that **moved around things** — the way water finds its way around a stone? A ping-pong game where the on-screen paragraph splits and wraps around the ball as it bounces, and a webcam mode where your own face and hands become the obstacle, live.
 
 **`@chenglou/pretext`** is a layout engine built around exactly that idea. Instead of flowing text into a fixed rectangle, it exposes two primitives:
 

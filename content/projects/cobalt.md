@@ -8,7 +8,7 @@ githubUrl: "https://github.com/mikelord007/Cobalt"
 liveUrl: "https://cobalt-alpha-five.vercel.app/"
 ---
 
-"Trust the operator" is the usual deal with off-chain compute. Cobalt removes it: app logic runs inside an **AWS Nitro Enclave**, and Monad only accepts a result after AWS's own hardware has proven, via a signed attestation, exactly which code produced it. Not even root access to the host machine can see inside the enclave or forge its output.
+Cobalt is TEE-as-a-service: a hosted way to run app backends inside a **Trusted Execution Environment** instead of a black box you just have to trust. App logic runs inside an **AWS Nitro Enclave**, a hardware-sealed environment, and Monad only accepts a result after AWS's own hardware has proven, via a signed attestation, exactly which code produced it. Not even root access to the host machine can see inside the enclave or forge its output.
 
 Built as a platform first, not a single app — the on-chain registry and the enclave server template don't know anything about the specific app running inside them, so `cobalt deploy <app-dir>` is a single command for the rest of the project's life, whatever you point it at.
 

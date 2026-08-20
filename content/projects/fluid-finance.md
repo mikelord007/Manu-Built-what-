@@ -7,7 +7,7 @@ image: "/images/fluid-finance.png"
 githubUrl: "https://github.com/mikelord007/fluid-finance"
 ---
 
-Most DeFi lending markets model your position as a row in a ledger someone else controls. Cadence, Flow's smart contract language, makes that a first-class **resource** instead — something that lives in your own account storage and can't be copied, only moved. Fluid Finance is two protocols built around leaning into that.
+Fluid Finance is a pair of DeFi protocols on Flow: a lending & borrowing market where you deposit crypto as collateral and borrow against it, and a staking system where rewards pay out as redeemable option tokens instead of a plain drip of coins. Both lean on something most chains don't have — Cadence, Flow's smart contract language, treats your position as a first-class **resource** instead of a row in someone else's ledger: something that lives in your own account storage and can't be copied, only moved.
 
 ---
 
