@@ -51,6 +51,14 @@ export default async function Home() {
             </div>
             <div className="flex flex-col items-end gap-2">
               <Link
+                href="/goals"
+                className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
+                data-cuelume-hover="tick"
+                data-cuelume-toggle
+              >
+                [ 2026 Goals ]
+              </Link>
+              <Link
                 href="/books"
                 className="font-mono text-xs tracking-widest uppercase underline hover:no-underline"
                 data-cuelume-hover="tick"
