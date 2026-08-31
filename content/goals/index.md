@@ -38,7 +38,7 @@ goals:
     source: books
     target: 5
     unit: books
-    progressLabel: "Books"
+    progressLabel: "Read"
     order: 2
 
   - slug: win-hackathons
@@ -49,7 +49,7 @@ goals:
     target: 3
     progress: 1
     unit: hackathons
-    progressLabel: "Hackathon"
+    progressLabel: "Won"
     order: 3
     wins:
       - project: cobalt
