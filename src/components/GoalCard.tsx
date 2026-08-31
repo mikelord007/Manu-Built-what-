@@ -36,7 +36,7 @@ export default function GoalCard({ goal }: { goal: GoalMeta }) {
               title={
                 goal.whoop
                   ? 'Live data unavailable right now — showing the last successfully fetched numbers.'
-                  : 'Live data unavailable right now — showing a manually entered number.'
+                  : 'Live data unavailable right now — showing a cached number.'
               }
               aria-label="Live data unavailable"
             >
