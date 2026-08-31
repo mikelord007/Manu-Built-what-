@@ -5,6 +5,9 @@ export interface WhoopRunStats {
   totalDistanceYearKm: number
   mostRecentRun: { date: string; distanceKm: number } | null
   streakWeeks: number
+  // km per calendar week since Jan 1, oldest first — index 0 is the week
+  // containing Jan 1, the last entry is the current (possibly partial) week.
+  weeklyDistanceKm: number[]
 }
 
 // `stale: true` means this isn't a live read — either the last successfully
@@ -75,6 +78,7 @@ function isValidStats(value: unknown): value is WhoopRunStats {
     typeof v.longestRun4wkKm === 'number' &&
     typeof v.totalDistanceYearKm === 'number' &&
     typeof v.streakWeeks === 'number' &&
+    Array.isArray(v.weeklyDistanceKm) &&
     (v.mostRecentRun === null || typeof v.mostRecentRun === 'object')
   )
 }
@@ -109,7 +113,18 @@ function computeStreakWeeks(runs: WhoopWorkout[], now: number): number {
   return streak
 }
 
-function computeRunStats(runs: WhoopWorkout[]): WhoopRunStats {
+function computeWeeklyDistanceKm(runs: WhoopWorkout[], yearStart: number, now: number): number[] {
+  const distanceKm = (w: WhoopWorkout) => (w.score?.distance_meter ?? 0) / 1000
+  const weekCount = Math.floor((now - yearStart) / WEEK_MS) + 1
+  const weeks = Array<number>(weekCount).fill(0)
+  for (const run of runs) {
+    const index = Math.floor((new Date(run.start).getTime() - yearStart) / WEEK_MS)
+    if (index >= 0 && index < weeks.length) weeks[index] += distanceKm(run)
+  }
+  return weeks
+}
+
+function computeRunStats(runs: WhoopWorkout[], yearStart: number): WhoopRunStats {
   const now = Date.now()
   const distanceKm = (w: WhoopWorkout) => (w.score?.distance_meter ?? 0) / 1000
   const last4wk = runs.filter(r => now - new Date(r.start).getTime() <= FOUR_WEEKS_MS)
@@ -131,6 +146,7 @@ function computeRunStats(runs: WhoopWorkout[]): WhoopRunStats {
     totalDistanceYearKm,
     mostRecentRun,
     streakWeeks: computeStreakWeeks(runs, now),
+    weeklyDistanceKm: computeWeeklyDistanceKm(runs, yearStart, now),
   }
 }
 
@@ -196,7 +212,7 @@ async function fetchLive(): Promise<WhoopRunStats | null> {
     const workouts = await fetchAllWorkouts(accessToken, yearStart)
     const runs = workouts.filter(w => w.sport_name === 'running')
 
-    return computeRunStats(runs)
+    return computeRunStats(runs, yearStart)
   } catch (error) {
     console.warn('Failed to fetch WHOOP run stats', error)
     return null

@@ -11,6 +11,10 @@
 #                isn't configured yet, falls back to `manualProgress`.
 # - why: a one-line reason this goal matters to you, shown under the title.
 # - order: controls display order on the page (lower = first).
+# - externalUrl: optional "follow along" link shown next to the goal.
+# - wins: optional list of concrete wins toward the goal (e.g. hackathons).
+#   Each needs project (a slug under content/projects, linked to
+#   /projects/<slug>), projectTitle, and tweetUrl.
 
 goals:
   - slug: half-marathon
@@ -21,6 +25,7 @@ goals:
     target: 21.1
     unit: km
     manualProgress: 0
+    externalUrl: "https://www.strava.com/athletes/167251187"
     order: 1
 
   - slug: read-books
@@ -34,11 +39,15 @@ goals:
 
   - slug: win-hackathons
     title: "Win 3 hackathons"
-    why: "Placeholder reason — update me."
+    why: "Chasing that old competitive flair back — three hackathon wins is the target."
     deadline: "2026-12-31"
     source: manual
     target: 3
     progress: 1
     unit: hackathons
     order: 3
+    wins:
+      - project: cobalt
+        projectTitle: "Cobalt"
+        tweetUrl: "https://x.com/topagentmike007/status/2089565387612635283"
 ---
