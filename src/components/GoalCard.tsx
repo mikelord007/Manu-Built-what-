@@ -55,7 +55,7 @@ export default function GoalCard({ goal }: { goal: GoalMeta }) {
             {goal.whoop.streakWeeks} week{goal.whoop.streakWeeks === 1 ? '' : 's'} streak
           </p>
           <p className="font-mono text-[10px] text-(--muted)">
-            {formatNumber(goal.whoop.totalDistance4wkKm)} km in the last 4 weeks
+            {formatNumber(goal.whoop.totalDistanceYearKm)} km this year
           </p>
           {goal.whoop.mostRecentRun && (
             <p className="font-mono text-[10px] text-(--muted)">

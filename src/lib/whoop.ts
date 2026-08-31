@@ -2,7 +2,7 @@ import { cacheLife } from 'next/cache'
 
 export interface WhoopRunStats {
   longestRun4wkKm: number
-  totalDistance4wkKm: number
+  totalDistanceYearKm: number
   mostRecentRun: { date: string; distanceKm: number } | null
   streakWeeks: number
 }
@@ -24,8 +24,7 @@ interface WhoopWorkout {
 
 const FOUR_WEEKS_MS = 28 * 24 * 60 * 60 * 1000
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000
-const LOOKBACK_WEEKS = 12
-const MAX_PAGES = 6
+const MAX_PAGES = 20
 
 const REFRESH_TOKEN_KEY = 'whoop:refresh_token'
 const LAST_GOOD_STATS_KEY = 'whoop:last_good_stats'
@@ -66,11 +65,26 @@ function storeRefreshToken(refreshToken: string): Promise<void> {
   return redisSet(REFRESH_TOKEN_KEY, refreshToken)
 }
 
+// Guards against a stale cached entry left over from a previous shape of
+// WhoopRunStats (e.g. a field got renamed) — treat it as absent rather than
+// handing the caller a value with missing fields.
+function isValidStats(value: unknown): value is WhoopRunStats {
+  if (!value || typeof value !== 'object') return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.longestRun4wkKm === 'number' &&
+    typeof v.totalDistanceYearKm === 'number' &&
+    typeof v.streakWeeks === 'number' &&
+    (v.mostRecentRun === null || typeof v.mostRecentRun === 'object')
+  )
+}
+
 async function getLastGoodStats(): Promise<WhoopRunStats | null> {
   const raw = await redisGet(LAST_GOOD_STATS_KEY)
   if (!raw) return null
   try {
-    return JSON.parse(raw) as WhoopRunStats
+    const parsed = JSON.parse(raw)
+    return isValidStats(parsed) ? parsed : null
   } catch {
     return null
   }
@@ -101,7 +115,9 @@ function computeRunStats(runs: WhoopWorkout[]): WhoopRunStats {
   const last4wk = runs.filter(r => now - new Date(r.start).getTime() <= FOUR_WEEKS_MS)
 
   const longestRun4wkKm = last4wk.reduce((max, r) => Math.max(max, distanceKm(r)), 0)
-  const totalDistance4wkKm = last4wk.reduce((sum, r) => sum + distanceKm(r), 0)
+  // `runs` is already scoped to the current calendar year (see fetchLive),
+  // so summing all of it is the year-to-date total.
+  const totalDistanceYearKm = runs.reduce((sum, r) => sum + distanceKm(r), 0)
 
   const mostRecent = [...runs].sort(
     (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
@@ -112,7 +128,7 @@ function computeRunStats(runs: WhoopWorkout[]): WhoopRunStats {
 
   return {
     longestRun4wkKm,
-    totalDistance4wkKm,
+    totalDistanceYearKm,
     mostRecentRun,
     streakWeeks: computeStreakWeeks(runs, now),
   }
@@ -176,8 +192,8 @@ async function fetchLive(): Promise<WhoopRunStats | null> {
     // already-invalidated refresh token.
     await storeRefreshToken(newRefreshToken)
 
-    const after = Date.now() - LOOKBACK_WEEKS * WEEK_MS
-    const workouts = await fetchAllWorkouts(accessToken, after)
+    const yearStart = new Date(new Date().getFullYear(), 0, 1).getTime()
+    const workouts = await fetchAllWorkouts(accessToken, yearStart)
     const runs = workouts.filter(w => w.sport_name === 'running')
 
     return computeRunStats(runs)
