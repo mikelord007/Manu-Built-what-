@@ -2,12 +2,12 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import { getAllBooks, getCompletedBooks, getCurrentYear } from './books'
-import { fetchStravaRunStats, type StravaRunStats } from './strava'
+import { fetchWhoopRunStats, type WhoopRunStats } from './whoop'
 
 const goalsDir = path.join(process.cwd(), 'content/goals')
 const indexPath = path.join(goalsDir, 'index.md')
 
-export type GoalSource = 'manual' | 'books' | 'strava'
+export type GoalSource = 'manual' | 'books' | 'whoop'
 
 export interface GoalMeta {
   slug: string
@@ -17,8 +17,12 @@ export interface GoalMeta {
   target: number
   unit: string
   progress: number
-  // Only set (possibly null, meaning the fetch failed) for source: strava.
-  strava?: StravaRunStats | null
+  // Only set for source: whoop. `whoop` is null if there's no data at all
+  // yet (never fetched successfully). `dataStale` is true whenever the
+  // live WHOOP call just failed, whether we're showing a cached fallback
+  // or the manual number — the goals page uses it to flag "may be off".
+  whoop?: WhoopRunStats | null
+  dataStale?: boolean
 }
 
 interface GoalIndexEntry {
@@ -47,7 +51,7 @@ function readGoalsIndex(): GoalIndexEntry[] {
       title: (entry.title as string) ?? (entry.slug as string),
       why: (entry.why as string) ?? '',
       deadline: (entry.deadline as string) ?? '',
-      source: ['manual', 'books', 'strava'].includes(entry.source as string)
+      source: ['manual', 'books', 'whoop'].includes(entry.source as string)
         ? (entry.source as GoalSource)
         : 'manual',
       target: typeof entry.target === 'number' ? entry.target : 0,
@@ -82,9 +86,14 @@ export async function getAllGoals(): Promise<GoalMeta[]> {
         return { ...base, progress: await resolveBooksProgress() }
       }
 
-      if (entry.source === 'strava') {
-        const strava = await fetchStravaRunStats()
-        return { ...base, progress: strava?.longestRun4wkKm ?? entry.manualProgress ?? 0, strava }
+      if (entry.source === 'whoop') {
+        const { stats, stale } = await fetchWhoopRunStats()
+        return {
+          ...base,
+          progress: stats?.longestRun4wkKm ?? entry.manualProgress ?? 0,
+          whoop: stats,
+          dataStale: stale,
+        }
       }
 
       return { ...base, progress: entry.progress ?? 0 }

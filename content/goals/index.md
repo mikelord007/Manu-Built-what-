@@ -6,8 +6,8 @@
 #     "books"  — auto-counted from content/books (completed + finishedDate
 #                in this calendar year). `progress`/`manualProgress` are
 #                ignored for this source.
-#     "strava" — auto-fetched from Strava (longest run in the trailing 28
-#                days, against `target` km). If the Strava fetch fails or
+#     "whoop"  — auto-fetched from WHOOP (longest run in the trailing 28
+#                days, against `target` km). If the WHOOP fetch fails or
 #                isn't configured yet, falls back to `manualProgress`.
 # - why: a one-line reason this goal matters to you, shown under the title.
 # - order: controls display order on the page (lower = first).
@@ -17,7 +17,7 @@ goals:
     title: "Run a half marathon"
     why: "Never finished a long race — want proof I can commit to training."
     deadline: "2026-12-31"
-    source: strava
+    source: whoop
     target: 21.1
     unit: km
     manualProgress: 0
