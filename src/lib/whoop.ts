@@ -98,16 +98,15 @@ function storeLastGoodStats(stats: WhoopRunStats): Promise<void> {
   return redisSet(LAST_GOOD_STATS_KEY, JSON.stringify(stats))
 }
 
-function computeStreakWeeks(runs: WhoopWorkout[], now: number): number {
+// Counts backward from the most recent week bucket (the same buckets the
+// chart draws) so the two numbers can never disagree about which weeks had
+// a run — they used to be computed from two different week alignments
+// (this one a rolling 7-days-from-now window, the chart calendar weeks
+// from Jan 1), which could and did disagree.
+function computeStreakWeeks(weeklyDistanceKm: number[]): number {
   let streak = 0
-  for (let week = 0; ; week++) {
-    const weekStart = now - (week + 1) * WEEK_MS
-    const weekEnd = now - week * WEEK_MS
-    const hasRun = runs.some(r => {
-      const t = new Date(r.start).getTime()
-      return t > weekStart && t <= weekEnd
-    })
-    if (!hasRun) break
+  for (let i = weeklyDistanceKm.length - 1; i >= 0; i--) {
+    if (weeklyDistanceKm[i] <= 0) break
     streak++
   }
   return streak
@@ -141,12 +140,14 @@ function computeRunStats(runs: WhoopWorkout[], yearStart: number): WhoopRunStats
     ? { date: mostRecent.start.slice(0, 10), distanceKm: distanceKm(mostRecent) }
     : null
 
+  const weeklyDistanceKm = computeWeeklyDistanceKm(runs, yearStart, now)
+
   return {
     longestRun4wkKm,
     totalDistanceYearKm,
     mostRecentRun,
-    streakWeeks: computeStreakWeeks(runs, now),
-    weeklyDistanceKm: computeWeeklyDistanceKm(runs, yearStart, now),
+    streakWeeks: computeStreakWeeks(weeklyDistanceKm),
+    weeklyDistanceKm,
   }
 }
 

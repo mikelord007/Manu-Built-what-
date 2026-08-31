@@ -10,6 +10,8 @@
 #                days, against `target` km). If the WHOOP fetch fails or
 #                isn't configured yet, falls back to `manualProgress`.
 # - why: a one-line reason this goal matters to you, shown under the title.
+# - progressLabel: prefix for the line under the progress bar, e.g.
+#   "Current mileage" -> "Current mileage: 8.1 out of 21.1 km".
 # - order: controls display order on the page (lower = first).
 # - externalUrl: optional "follow along" link shown next to the goal.
 # - wins: optional list of concrete wins toward the goal (e.g. hackathons).
@@ -24,6 +26,7 @@ goals:
     source: whoop
     target: 21.1
     unit: km
+    progressLabel: "Current mileage"
     manualProgress: 0
     externalUrl: "https://www.strava.com/athletes/167251187"
     order: 1
@@ -35,6 +38,7 @@ goals:
     source: books
     target: 5
     unit: books
+    progressLabel: "Books"
     order: 2
 
   - slug: win-hackathons
@@ -45,6 +49,7 @@ goals:
     target: 3
     progress: 1
     unit: hackathons
+    progressLabel: "Hackathon"
     order: 3
     wins:
       - project: cobalt

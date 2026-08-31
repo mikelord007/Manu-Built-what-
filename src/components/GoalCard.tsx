@@ -12,15 +12,25 @@ function formatNumber(n: number): string {
   return Number.isInteger(n) ? String(n) : n.toFixed(1)
 }
 
-function ProgressBar({ progress, target, unit }: { progress: number; target: number; unit: string }) {
+function ProgressBar({
+  progress,
+  target,
+  unit,
+  label,
+}: {
+  progress: number
+  target: number
+  unit: string
+  label: string
+}) {
   const pct = target > 0 ? Math.min(100, Math.max(0, (progress / target) * 100)) : 0
   return (
     <div>
       <div className="h-2 border border-(--border) bg-(--bg)">
         <div className="h-full bg-(--fg)" style={{ width: `${pct}%` }} />
       </div>
-      <p className="font-mono text-[10px] text-(--muted) mt-1">
-        {formatNumber(progress)} / {formatNumber(target)} {unit}
+      <p className="font-mono text-xs text-(--muted) mt-2">
+        {label}: {formatNumber(progress)} out of {formatNumber(target)} {unit}
       </p>
     </div>
   )
@@ -30,33 +40,26 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
   const number = String(index + 1).padStart(2, '0')
 
   return (
-    <div className="py-10 first:pt-0">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <p className="font-mono text-xs tracking-widest text-(--muted) mb-2">{number}</p>
-          <h2 className="font-mono font-black text-3xl sm:text-4xl tracking-tight leading-none flex items-center gap-3">
-            {goal.title}
-            {goal.dataStale && (
-              <span
-                className="text-amber-500 text-xl shrink-0"
-                title="Live data unavailable right now — showing a cached number."
-                aria-label="Live data unavailable"
-              >
-                ⚠
-              </span>
-            )}
-          </h2>
-          {goal.why && <p className="font-mono text-sm text-(--muted) mt-2 max-w-lg">{goal.why}</p>}
-        </div>
-        {goal.deadline && (
-          <p className="font-mono text-[10px] text-(--muted) whitespace-nowrap shrink-0 mt-1">
-            By {formatGoalDate(goal.deadline)}
-          </p>
-        )}
+    <div className="border border-(--border) bg-(--bg) p-6 sm:p-8">
+      <div>
+        <p className="font-mono text-xs tracking-widest text-(--muted) mb-2">{number}</p>
+        <h2 className="font-mono font-black text-3xl sm:text-4xl tracking-tight leading-none flex items-center gap-3">
+          {goal.title}
+          {goal.dataStale && (
+            <span
+              className="text-amber-500 text-xl shrink-0"
+              title="Live data unavailable right now — showing a cached number."
+              aria-label="Live data unavailable"
+            >
+              ⚠
+            </span>
+          )}
+        </h2>
+        {goal.why && <p className="font-mono text-sm text-(--muted) mt-2 max-w-lg">{goal.why}</p>}
       </div>
 
       <div className="max-w-xl mt-6">
-        <ProgressBar progress={goal.progress} target={goal.target} unit={goal.unit} />
+        <ProgressBar progress={goal.progress} target={goal.target} unit={goal.unit} label={goal.progressLabel} />
       </div>
 
       <div className="max-w-xl mt-6 flex flex-col gap-5">

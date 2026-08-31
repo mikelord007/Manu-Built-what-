@@ -23,6 +23,9 @@ export interface GoalMeta {
   target: number
   unit: string
   progress: number
+  // Prefix shown before the "X out of Y unit" line under the progress bar,
+  // e.g. "Current mileage" -> "Current mileage: 8.1 out of 21.1 km".
+  progressLabel: string
   // A "follow along" link shown next to the goal, if any (e.g. Strava).
   externalUrl?: string
   // Only set for source: whoop. `whoop` is null if there's no data at all
@@ -49,6 +52,7 @@ interface GoalIndexEntry {
   source: GoalSource
   target: number
   unit: string
+  progressLabel: string
   progress?: number
   manualProgress?: number
   order?: number
@@ -87,6 +91,7 @@ function readGoalsIndex(): GoalIndexEntry[] {
         : 'manual',
       target: typeof entry.target === 'number' ? entry.target : 0,
       unit: (entry.unit as string) ?? '',
+      progressLabel: (entry.progressLabel as string) ?? 'Progress',
       ...(typeof entry.progress === 'number' ? { progress: entry.progress } : {}),
       ...(typeof entry.manualProgress === 'number' ? { manualProgress: entry.manualProgress } : {}),
       ...(typeof entry.order === 'number' ? { order: entry.order } : {}),
@@ -124,6 +129,7 @@ export async function getAllGoals(): Promise<GoalMeta[]> {
         deadline: entry.deadline,
         target: entry.target,
         unit: entry.unit,
+        progressLabel: entry.progressLabel,
         ...(entry.externalUrl ? { externalUrl: entry.externalUrl } : {}),
         ...(entry.wins ? { wins: entry.wins } : {}),
       }

@@ -37,7 +37,7 @@ export default async function GoalsPage() {
         {goals.length === 0 ? (
           <p className="font-mono text-sm text-(--muted)">nothing set yet.</p>
         ) : (
-          <div className="divide-y divide-(--border)">
+          <div className="flex flex-col gap-6">
             {goals.map((goal, i) => (
               <GoalCard key={goal.slug} goal={goal} index={i} />
             ))}
