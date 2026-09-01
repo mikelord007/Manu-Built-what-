@@ -21,7 +21,7 @@
 goals:
   - slug: half-marathon
     title: "Run a half marathon"
-    why: "Never finished a long race — want proof I can commit to training."
+    why: "Never finished a long race. Want proof I can commit to training."
     deadline: "2026-12-31"
     source: whoop
     target: 21.1
@@ -33,7 +33,7 @@ goals:
 
   - slug: read-books
     title: "Read 5 books"
-    why: "I've never been a reader — trying to build the habit."
+    why: "I've never been a reader. Trying to build the habit."
     deadline: "2026-12-31"
     source: books
     target: 5
@@ -43,7 +43,7 @@ goals:
 
   - slug: win-hackathons
     title: "Win 3 hackathons"
-    why: "Chasing that old competitive flair back — three hackathon wins is the target."
+    why: "Chasing that old competitive flair back. Three hackathon wins is the target."
     deadline: "2026-12-31"
     source: manual
     target: 3

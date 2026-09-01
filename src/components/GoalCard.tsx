@@ -48,7 +48,7 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
           {goal.dataStale && (
             <span
               className="text-amber-500 text-xl shrink-0"
-              title="Live data unavailable right now — showing a cached number."
+              title="Live data unavailable right now, showing a cached number."
               aria-label="Live data unavailable"
             >
               ⚠
@@ -93,8 +93,7 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
 
         {goal.lastFinishedBook && (
           <p className="font-mono text-xs text-(--muted)">
-            Last finished: <span className="text-(--fg)">{goal.lastFinishedBook.title}</span>
-            {' — '}
+            Last finished: <span className="text-(--fg)">{goal.lastFinishedBook.title}</span> by{' '}
             {goal.lastFinishedBook.author}
             {goal.lastFinishedBook.finishedDate && `, ${formatGoalDate(goal.lastFinishedBook.finishedDate)}`}
           </p>
