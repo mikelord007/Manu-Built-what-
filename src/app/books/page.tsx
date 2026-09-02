@@ -50,18 +50,6 @@ export default async function BooksPage() {
           </p>
         </header>
 
-        <div className="mb-16 border border-(--border) bg-(--bg) p-4 flex items-start gap-4">
-          <div className="w-8 h-8 border border-(--border) flex items-center justify-center shrink-0" aria-hidden="true">
-            <svg width="12" height="12" viewBox="0 0 14 14">
-              <polygon points="7,1 13,13 1,13" fill="currentColor" />
-            </svg>
-          </div>
-          <p className="font-mono text-sm text-(--muted)">
-            reading is a new habit for me, started in 2026. the shelf is thin because the habit is young, not
-            because I stalled, one book at a time, tracked here as it happens.
-          </p>
-        </div>
-
         <BookStats stats={stats} favoriteQuote={favoriteQuote} />
 
         <section className="mb-16">
