@@ -34,7 +34,13 @@ export default async function Home() {
             Manu Built What?
           </h1>
           <p className="font-mono text-xs mt-10 sm:mt-14 tracking-widest uppercase text-(--muted)">2026</p>
-          <div className="flex items-start justify-between mt-6">
+          <p className="font-mono text-sm leading-7 sm:max-w-[85%] mt-3">
+            Hi, I&apos;m Manu. I lowkey like building stuff and have been doing it before the ai coding overlords took over.
+            Right now I&apos;m more focused on distribution because building is cheap.
+            <br />
+            Check out my projects, I&apos;ll try to keep them updated.
+          </p>
+          <div className="flex items-start justify-between mt-8">
             <div className="flex items-center gap-4">
               <a href="https://x.com/topagentmike007" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" className="text-(--muted) hover:text-(--fg) transition-colors" data-cuelume-hover="tick" data-cuelume-toggle>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -77,11 +83,6 @@ export default async function Home() {
             </div>
           </div>
         </header>
-
-        <p className="font-mono text-sm leading-7 max-w-2xl mb-16">
-          Hi, I&apos;m Manu. I lowkey like building stuff and have been doing it before the ai coding overlords took over.
-          Right now I&apos;m more focused on distribution because building is cheap. Check out my projects, I&apos;ll try to keep them updated.
-        </p>
 
         {projects.length === 0 ? (
           <p className="font-mono text-sm text-(--muted)">nothing yet.</p>
