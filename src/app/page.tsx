@@ -36,7 +36,7 @@ export default async function Home() {
           <p className="font-mono text-xs mt-10 sm:mt-14 tracking-widest uppercase text-(--muted)">2026</p>
           <p className="font-mono text-sm leading-7 sm:max-w-[85%] mt-3">
             Hi, I&apos;m Manu. I lowkey like building stuff and have been doing it before the ai coding overlords took over.
-            Right now I&apos;m more focused on distribution because building is cheap.
+            Right now I&apos;m more focused on distribution after building got cheap.
             <br />
             Check out my projects, I&apos;ll try to keep them updated.
           </p>
