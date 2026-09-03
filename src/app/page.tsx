@@ -78,9 +78,9 @@ export default async function Home() {
           </div>
         </header>
 
-        <p className="font-mono text-sm leading-7 text-(--muted) max-w-2xl mx-auto text-center mb-16">
+        <p className="font-mono text-sm leading-7 max-w-2xl mb-16">
           Hi, I&apos;m Manu. I lowkey like building stuff and have been doing it before the ai coding overlords took over.
-          Right now I&apos;m more focused on distribution because building is cheap. Checkout my projects, I&apos;ll try to keep them updated.
+          Right now I&apos;m more focused on distribution because building is cheap. Check out my projects, I&apos;ll try to keep them updated.
         </p>
 
         {projects.length === 0 ? (
