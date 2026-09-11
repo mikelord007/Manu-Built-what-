@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import {
-  getAllBooks,
+  getBookData,
   getCurrentlyReading,
   getUpcomingReads,
   getCompletedBooks,
@@ -22,12 +22,13 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default async function BooksPage() {
-  const books = await withResolvedMetadata(getAllBooks())
+  const [result, year] = await Promise.all([getBookData(), getCurrentYear()])
+  const books = result.data === null ? [] : await withResolvedMetadata(result.data)
   const currentlyReading = getCurrentlyReading(books)
   const upcomingReads = getUpcomingReads(books)
   const completedBooks = getCompletedBooks(books)
-  const stats = getYearlyBookStats(books, await getCurrentYear())
-  const favoriteQuote = getFavoriteQuote()
+  const stats = getYearlyBookStats(books, year)
+  const favoriteQuote = getFavoriteQuote(books)
 
   return (
     <main className="min-h-screen flex flex-col items-center">
@@ -50,54 +51,69 @@ export default async function BooksPage() {
           </p>
         </header>
 
-        <BookStats stats={stats} favoriteQuote={favoriteQuote} />
+        {result.data === null ? (
+          <p role="status" className="font-mono text-sm text-(--muted)">
+            {result.status === 'unconfigured' || result.status === 'misconfigured'
+              ? 'Reading data is not connected yet.'
+              : 'Reading data is temporarily unavailable. Please try again shortly.'}
+          </p>
+        ) : (
+          <>
+            {result.status === 'stale' && (
+              <p role="status" className="font-mono text-xs text-(--muted) mb-6">
+                Reading updates are temporarily unavailable. Showing the last saved data.
+              </p>
+            )}
+            <BookStats stats={stats} favoriteQuote={favoriteQuote} />
 
-        <section className="mb-16">
-          <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
-            Currently Reading
-          </h2>
-          {currentlyReading.length === 0 ? (
-            <p className="font-mono text-sm text-(--muted)">nothing in progress right now.</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {currentlyReading.map((book, i) => (
-                <ReadingCard key={book.slug} book={book} priority={i === 0} />
-              ))}
-            </div>
-          )}
-        </section>
+            <section className="mb-16">
+              <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
+                Currently Reading
+              </h2>
+              {currentlyReading.length === 0 ? (
+                <p className="font-mono text-sm text-(--muted)">nothing in progress right now.</p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {currentlyReading.map((book, i) => (
+                    <ReadingCard key={book.id} book={book} priority={i === 0} />
+                  ))}
+                </div>
+              )}
+            </section>
 
-        <section className="mb-16">
-          <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
-            Completed
-          </h2>
-          {completedBooks.length === 0 ? (
-            <p className="font-mono text-sm text-(--muted)">
-              nothing finished yet, first one&apos;s still in progress.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {completedBooks.map(book => (
-                <BookCard key={book.slug} book={book} />
-              ))}
-            </div>
-          )}
-        </section>
+            <section className="mb-16">
+              <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
+                Completed
+              </h2>
+              {completedBooks.length === 0 ? (
+                <p className="font-mono text-sm text-(--muted)">
+                  nothing finished yet, first one&apos;s still in progress.
+                </p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {completedBooks.map(book => (
+                    <BookCard key={book.id} book={book} />
+                  ))}
+                </div>
+              )}
+            </section>
 
-        <section>
-          <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
-            Upcoming Reads
-          </h2>
-          {upcomingReads.length === 0 ? (
-            <p className="font-mono text-sm text-(--muted)">nothing queued yet.</p>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {upcomingReads.map(book => (
-                <ReadingCard key={book.slug} book={book} />
-              ))}
-            </div>
-          )}
-        </section>
+            <section>
+              <h2 className="font-mono text-xs tracking-widest uppercase text-(--muted) mb-4">
+                Upcoming Reads
+              </h2>
+              {upcomingReads.length === 0 ? (
+                <p className="font-mono text-sm text-(--muted)">nothing queued yet.</p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {upcomingReads.map(book => (
+                    <ReadingCard key={book.id} book={book} />
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
+        )}
       </div>
     </main>
   )

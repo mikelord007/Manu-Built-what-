@@ -1,21 +1,18 @@
 import Image from 'next/image'
 import type { BookMeta } from '@/lib/books'
 
-function formatBookDate(date: string): string {
-  const parsed = new Date(date)
-  if (Number.isNaN(parsed.getTime())) return date
-  return new Intl.DateTimeFormat('en-GB').format(parsed)
-}
+import { formatCalendarDate as formatBookDate } from '@/lib/calendar'
+import { needsUnoptimizedCover } from '@/lib/safe-url'
 
 function Stars({ rating }: { rating: number }) {
   const pct = Math.min(100, Math.max(0, (rating / 5) * 100))
   return (
-    <span className="font-mono text-sm tracking-wider inline-flex items-center" aria-label={`${rating} out of 5`}>
+    <span className="font-mono text-sm tracking-wider inline-flex flex-wrap items-center gap-x-2 gap-y-1" aria-label={`${rating} out of 5`}>
       <span className="relative inline-block">
         <span className="text-(--muted)">★★★★★</span>
         <span className="absolute inset-0 overflow-hidden whitespace-nowrap" style={{ width: `${pct}%` }}>★★★★★</span>
       </span>
-      <span className="ml-2 text-xs text-(--muted)">{rating}/5</span>
+      <span className="text-xs text-(--muted)">{rating}/5</span>
     </span>
   )
 }
@@ -27,6 +24,7 @@ export default function BookCard({ book, priority }: { book: BookMeta; priority?
         {book.cover ? (
           <Image
             src={book.cover}
+            unoptimized={needsUnoptimizedCover(book.cover)}
             alt={book.title}
             fill
             sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
@@ -50,7 +48,7 @@ export default function BookCard({ book, priority }: { book: BookMeta; priority?
         {typeof book.rating === 'number' && <Stars rating={book.rating} />}
 
         {book.summary && (
-          <p className="font-mono text-xs leading-relaxed">{book.summary}</p>
+          <p className="font-mono text-xs leading-relaxed whitespace-pre-wrap break-words">{book.summary}</p>
         )}
 
         {book.whatChangedForMe && (
@@ -58,7 +56,7 @@ export default function BookCard({ book, priority }: { book: BookMeta; priority?
             <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted) mb-1">
               What changed for me
             </p>
-            <p className="font-mono text-xs leading-relaxed">{book.whatChangedForMe}</p>
+            <p className="font-mono text-xs leading-relaxed whitespace-pre-wrap break-words">{book.whatChangedForMe}</p>
           </div>
         )}
 

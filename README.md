@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Books and hackathon win progress use the existing private Notion databases.
+See [Notion setup and editing instructions](docs/notion-data.md) for production
+environment variables, property mappings, refresh behavior, and verification.
+
 ## Getting Started
 
 First, run the development server:

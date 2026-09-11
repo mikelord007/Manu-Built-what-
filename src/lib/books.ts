@@ -1,46 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
+import 'server-only'
 import { cacheLife } from 'next/cache'
-
-const booksDir = path.join(process.cwd(), 'content/books')
-const indexPath = path.join(booksDir, 'index.md')
-const detailsDir = path.join(booksDir, 'details')
-
-export type BookStatus = 'completed' | 'reading' | 'upcoming'
-
-export interface BookMeta {
-  slug: string
-  title: string
-  author: string
-  status: BookStatus
-  cover?: string
-  startedDate?: string
-  finishedDate?: string
-  pages?: number
-  rating?: number
-  summary?: string
-  whatChangedForMe?: string
-  link?: string
-  order?: number
-}
-
-export interface YearlyBookStats {
-  year: number
-  completedCount: number
-  booksPerMonth: number[]
-  totalPages: number
-}
-
-export interface FavoriteQuote {
-  text: string
-  book?: string
-  author?: string
-  // The in-book character who says the line, if it's dialogue you want
-  // credited to them rather than the author (e.g. "Ryland Grace" instead
-  // of "Andy Weir" for a Project Hail Mary quote).
-  speaker?: string
-}
+import type { BookMeta } from './book-model'
+export * from './book-model'
+export { getBookData } from './notion'
 
 interface BookProviderMeta {
   cover?: string
@@ -139,9 +101,9 @@ async function fetchOpenLibraryMeta(title: string, author: string): Promise<Book
 }
 
 // Covers and page counts are fetched automatically so books only need
-// title/author/status in frontmatter. Google Books is tried first (better
+// title/author/status in Notion. Google Books is tried first (better
 // coverage of newer releases); Open Library fills in whatever's still
-// missing. A manually set `cover` or `pages` value in frontmatter always
+// missing. A manually set `cover` or `pages` value in Notion always
 // wins over any fetched value.
 export async function withResolvedMetadata(books: BookMeta[]): Promise<BookMeta[]> {
   return Promise.all(
@@ -160,131 +122,10 @@ export async function withResolvedMetadata(books: BookMeta[]): Promise<BookMeta[
   )
 }
 
-interface BookIndexEntry {
-  slug: string
-  title: string
-  author: string
-  status: BookStatus
-  order?: number
-}
-
-function readBookIndex(): BookIndexEntry[] {
-  if (!fs.existsSync(indexPath)) return []
-  const { data } = matter(fs.readFileSync(indexPath, 'utf8'))
-  const entries = Array.isArray(data.books) ? data.books : []
-  return entries
-    .filter((entry: unknown): entry is Record<string, unknown> =>
-      !!entry && typeof entry === 'object' && typeof (entry as Record<string, unknown>).slug === 'string'
-    )
-    .map(entry => ({
-      slug: entry.slug as string,
-      title: (entry.title as string) ?? (entry.slug as string),
-      author: (entry.author as string) ?? '',
-      status: ['completed', 'reading', 'upcoming'].includes(entry.status as string)
-        ? (entry.status as BookStatus)
-        : 'upcoming',
-      ...(typeof entry.order === 'number' ? { order: entry.order } : {}),
-    }))
-}
-
-export function getFavoriteQuote(): FavoriteQuote | null {
-  if (!fs.existsSync(indexPath)) return null
-  const { data } = matter(fs.readFileSync(indexPath, 'utf8'))
-  const quote = data.favoriteQuote
-  if (!quote || typeof quote !== 'object' || typeof quote.text !== 'string' || !quote.text.trim()) return null
-  return {
-    text: quote.text,
-    ...(typeof quote.book === 'string' && quote.book ? { book: quote.book } : {}),
-    ...(typeof quote.author === 'string' && quote.author ? { author: quote.author } : {}),
-    ...(typeof quote.speaker === 'string' && quote.speaker ? { speaker: quote.speaker } : {}),
-  }
-}
-
-// gray-matter's YAML parser turns a bare `startedDate: 2026-08-08` into a JS
-// Date object rather than a string, so a plain `String(value)` produces a
-// locale string ("Sat Aug 08 2026 ...") instead of an ISO date — breaking
-// the lexicographic date comparisons used to sort/filter books by date.
-function normalizeDate(value: unknown): string {
-  if (!value) return ''
-  if (value instanceof Date) return value.toISOString().slice(0, 10)
-  return String(value)
-}
-
-function readBookDetails(slug: string): Partial<BookMeta> {
-  const fullPath = path.join(detailsDir, `${slug}.md`)
-  if (!fs.existsSync(fullPath)) return {}
-  try {
-    const { data } = matter(fs.readFileSync(fullPath, 'utf8'))
-    return {
-      ...(data.cover ? { cover: data.cover } : {}),
-      ...(data.startedDate ? { startedDate: normalizeDate(data.startedDate) } : {}),
-      ...(data.finishedDate ? { finishedDate: normalizeDate(data.finishedDate) } : {}),
-      ...(typeof data.pages === 'number' ? { pages: data.pages } : {}),
-      ...(typeof data.rating === 'number' ? { rating: data.rating } : {}),
-      ...(data.summary ? { summary: data.summary } : {}),
-      ...(data.whatChangedForMe ? { whatChangedForMe: data.whatChangedForMe } : {}),
-      ...(data.link ? { link: data.link } : {}),
-    }
-  } catch (error) {
-    console.warn(`Skipping invalid book details file: ${slug}.md`, error)
-    return {}
-  }
-}
-
-export function getAllBooks(): BookMeta[] {
-  return readBookIndex().map(entry => ({
-    ...entry,
-    ...readBookDetails(entry.slug),
-  }))
-}
-
-export function getCurrentlyReading(books: BookMeta[]): BookMeta[] {
-  return books
-    .filter(b => b.status === 'reading')
-    .sort((a, b) => (a.startedDate ?? '') < (b.startedDate ?? '') ? 1 : -1)
-}
-
-export function getUpcomingReads(books: BookMeta[]): BookMeta[] {
-  return books
-    .filter(b => b.status === 'upcoming')
-    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
-    .slice(0, 4)
-}
-
-export function getCompletedBooks(books: BookMeta[]): BookMeta[] {
-  return books
-    .filter(b => b.status === 'completed')
-    .sort((a, b) => (a.finishedDate ?? '') < (b.finishedDate ?? '') ? 1 : -1)
-}
-
-// `new Date()` can't be read directly in a prerendered Server Component
-// (it'd freeze at build time). Caching it with a daily cacheLife keeps the
-// rest of the page statically cached while still rolling over correctly
-// on Jan 1.
+// The portfolio uses the owner's calendar year. A short cache lets both
+// reading views roll over together shortly after midnight in India.
 export async function getCurrentYear(): Promise<number> {
   'use cache'
-  cacheLife('days')
-  return new Date().getFullYear()
-}
-
-export function getYearlyBookStats(books: BookMeta[], year: number): YearlyBookStats {
-  const completedThisYear = books.filter(
-    b => b.status === 'completed' && b.finishedDate && new Date(b.finishedDate).getFullYear() === year
-  )
-
-  const booksPerMonth = Array(12).fill(0)
-  let totalPages = 0
-
-  for (const book of completedThisYear) {
-    const month = new Date(book.finishedDate as string).getMonth()
-    booksPerMonth[month] += 1
-    if (typeof book.pages === 'number') totalPages += book.pages
-  }
-
-  return {
-    year,
-    completedCount: completedThisYear.length,
-    booksPerMonth,
-    totalPages,
-  }
+  cacheLife({ stale: 30, revalidate: 300, expire: 86400 })
+  return Number(new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date()))
 }

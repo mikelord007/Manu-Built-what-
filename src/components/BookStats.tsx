@@ -15,10 +15,10 @@ function StatTile({
 }) {
   return (
     <div className="border border-(--border) bg-(--bg) p-4 flex flex-col gap-1">
-      <div className="flex items-center gap-1.5">
+      <div className="relative flex items-center gap-1.5">
         <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted)">{label}</p>
         {tooltip && (
-          <span className="relative group">
+          <span className="group">
             <button
               type="button"
               className="w-3.5 h-3.5 border border-(--border) flex items-center justify-center shrink-0 text-(--muted) hover:text-(--fg) focus-visible:text-(--fg) focus-visible:outline-none"

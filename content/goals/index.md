@@ -3,7 +3,7 @@
 #
 # - source: how progress is computed.
 #     "manual" — you hand-edit `progress` yourself.
-#     "books"  — auto-counted from content/books (completed + finishedDate
+#     "books"  — auto-counted from Notion books (completed + finishedDate
 #                in this calendar year). `progress`/`manualProgress` are
 #                ignored for this source.
 #     "whoop"  — auto-fetched from WHOOP (longest run in the trailing 28
@@ -14,9 +14,8 @@
 #   "Current mileage" -> "Current mileage: 8.1 out of 21.1 km".
 # - order: controls display order on the page (lower = first).
 # - externalUrl: optional "follow along" link shown next to the goal.
-# - wins: optional list of concrete wins toward the goal (e.g. hackathons).
-#   Each needs project (a slug under content/projects, linked to
-#   /projects/<slug>), projectTitle, and tweetUrl.
+# - source: "hackathons" counts dated Notion win records in this calendar year.
+#   Project / Tweet links also come from Notion. Keep targets and descriptions here.
 
 goals:
   - slug: half-marathon
@@ -45,14 +44,9 @@ goals:
     title: "Win 3 hackathons"
     why: "Chasing that old competitive flair back. Three hackathon wins is the target."
     deadline: "2026-12-31"
-    source: manual
+    source: hackathons
     target: 3
-    progress: 1
     unit: hackathons
     progressLabel: "Won"
     order: 3
-    wins:
-      - project: cobalt
-        projectTitle: "Cobalt"
-        tweetUrl: "https://x.com/topagentmike007/status/2089565387612635283"
 ---

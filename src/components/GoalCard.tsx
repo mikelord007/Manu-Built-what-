@@ -1,11 +1,9 @@
-import Link from 'next/link'
 import type { GoalMeta } from '@/lib/goals'
 import WeeklyRunChart from './WeeklyRunChart'
+import { formatCalendarDate } from '@/lib/calendar'
 
 function formatGoalDate(date: string): string {
-  const parsed = new Date(date)
-  if (Number.isNaN(parsed.getTime())) return date
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(parsed)
+  return formatCalendarDate(date, true)
 }
 
 function formatNumber(n: number): string {
@@ -59,7 +57,13 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
       </div>
 
       <div className="max-w-xl mt-6">
-        <ProgressBar progress={goal.progress} target={goal.target} unit={goal.unit} label={goal.progressLabel} />
+        {goal.progress === null ? (
+          <p role="status" className="font-mono text-xs text-(--muted)">
+            Progress is currently unavailable. Please try again shortly.
+          </p>
+        ) : (
+          <ProgressBar progress={goal.progress} target={goal.target} unit={goal.unit} label={goal.progressLabel} />
+        )}
       </div>
 
       <div className="max-w-xl mt-6 flex flex-col gap-5">
@@ -103,17 +107,19 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
           <div className="flex flex-col gap-2">
             <p className="font-mono text-[10px] tracking-widest uppercase text-(--muted)">Wins</p>
             {goal.wins.map(win => (
-              <div key={win.project} className="flex items-center gap-4 font-mono text-xs">
-                <span className="font-bold">{win.projectTitle}</span>
-                <Link
-                  href={`/projects/${win.project}`}
+              <div key={win.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs">
+                <span className="font-bold break-words min-w-0 max-w-full">{win.projectTitle}</span>
+                {win.projectUrl && <a
+                  href={win.projectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="underline hover:no-underline"
                   data-cuelume-hover="tick"
                   data-cuelume-toggle
                 >
                   [ Project ]
-                </Link>
-                <a
+                </a>}
+                {win.tweetUrl && <a
                   href={win.tweetUrl}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -122,7 +128,7 @@ export default function GoalCard({ goal, index }: { goal: GoalMeta; index: numbe
                   data-cuelume-toggle
                 >
                   [ Tweet ]
-                </a>
+                </a>}
               </div>
             ))}
           </div>

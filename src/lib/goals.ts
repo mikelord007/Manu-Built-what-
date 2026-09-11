@@ -1,19 +1,16 @@
+import 'server-only'
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { getAllBooks, getCompletedBooks, getCurrentYear } from './books'
+import { getBookData, getReadingGoal, getCurrentYear } from './books'
+import { getHackathonData } from './notion'
+import { getYearlyWins, type HackathonWin } from './notion-model'
 import { fetchWhoopRunStats, type WhoopRunStats } from './whoop'
 
 const goalsDir = path.join(process.cwd(), 'content/goals')
 const indexPath = path.join(goalsDir, 'index.md')
 
-export type GoalSource = 'manual' | 'books' | 'whoop'
-
-export interface HackathonWin {
-  project: string
-  projectTitle: string
-  tweetUrl: string
-}
+export type GoalSource = 'manual' | 'books' | 'whoop' | 'hackathons'
 
 export interface GoalMeta {
   slug: string
@@ -22,7 +19,7 @@ export interface GoalMeta {
   deadline: string
   target: number
   unit: string
-  progress: number
+  progress: number | null
   // Prefix shown before the "X out of Y unit" line under the progress bar,
   // e.g. "Current mileage" -> "Current mileage: 8.1 out of 21.1 km".
   progressLabel: string
@@ -33,6 +30,7 @@ export interface GoalMeta {
   // live WHOOP call just failed, whether we're showing a cached fallback
   // or the manual number — the goals page uses it to flag "may be off".
   whoop?: WhoopRunStats | null
+  // Also marks last-good Notion data when a book/win refresh fails.
   dataStale?: boolean
   // Only set for source: whoop — needed by WeeklyRunChart, which can't call
   // `new Date()` itself (that's disallowed in a prerendered Server
@@ -40,7 +38,7 @@ export interface GoalMeta {
   currentYear?: number
   // Only set for source: books.
   lastFinishedBook?: { title: string; author: string; finishedDate: string } | null
-  // Only set when the goal's index entry has a `wins` list (e.g. hackathons).
+  // Dated Notion wins for the current calendar year.
   wins?: HackathonWin[]
 }
 
@@ -57,20 +55,6 @@ interface GoalIndexEntry {
   manualProgress?: number
   order?: number
   externalUrl?: string
-  wins?: HackathonWin[]
-}
-
-function readWins(value: unknown): HackathonWin[] | undefined {
-  if (!Array.isArray(value)) return undefined
-  const wins = value
-    .filter((w): w is Record<string, unknown> => !!w && typeof w === 'object')
-    .map(w => ({
-      project: String(w.project ?? ''),
-      projectTitle: String(w.projectTitle ?? w.project ?? ''),
-      tweetUrl: String(w.tweetUrl ?? ''),
-    }))
-    .filter(w => w.project && w.tweetUrl)
-  return wins.length > 0 ? wins : undefined
 }
 
 function readGoalsIndex(): GoalIndexEntry[] {
@@ -86,7 +70,7 @@ function readGoalsIndex(): GoalIndexEntry[] {
       title: (entry.title as string) ?? (entry.slug as string),
       why: (entry.why as string) ?? '',
       deadline: (entry.deadline as string) ?? '',
-      source: ['manual', 'books', 'whoop'].includes(entry.source as string)
+      source: ['manual', 'books', 'whoop', 'hackathons'].includes(entry.source as string)
         ? (entry.source as GoalSource)
         : 'manual',
       target: typeof entry.target === 'number' ? entry.target : 0,
@@ -96,26 +80,8 @@ function readGoalsIndex(): GoalIndexEntry[] {
       ...(typeof entry.manualProgress === 'number' ? { manualProgress: entry.manualProgress } : {}),
       ...(typeof entry.order === 'number' ? { order: entry.order } : {}),
       ...(typeof entry.externalUrl === 'string' ? { externalUrl: entry.externalUrl } : {}),
-      ...(readWins(entry.wins) ? { wins: readWins(entry.wins) } : {}),
     }))
     .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
-}
-
-async function resolveBooksGoal(): Promise<{
-  progress: number
-  lastFinishedBook: GoalMeta['lastFinishedBook']
-}> {
-  const year = await getCurrentYear()
-  const completed = getCompletedBooks(getAllBooks())
-  const thisYear = completed.filter(b => b.finishedDate && new Date(b.finishedDate).getFullYear() === year)
-  const lastFinished = completed[0]
-
-  return {
-    progress: thisYear.length,
-    lastFinishedBook: lastFinished
-      ? { title: lastFinished.title, author: lastFinished.author, finishedDate: lastFinished.finishedDate ?? '' }
-      : null,
-  }
 }
 
 export async function getAllGoals(): Promise<GoalMeta[]> {
@@ -131,12 +97,19 @@ export async function getAllGoals(): Promise<GoalMeta[]> {
         unit: entry.unit,
         progressLabel: entry.progressLabel,
         ...(entry.externalUrl ? { externalUrl: entry.externalUrl } : {}),
-        ...(entry.wins ? { wins: entry.wins } : {}),
       }
 
       if (entry.source === 'books') {
-        const { progress, lastFinishedBook } = await resolveBooksGoal()
-        return { ...base, progress, lastFinishedBook }
+        const [result, year] = await Promise.all([getBookData(), getCurrentYear()])
+        if (result.data === null) return { ...base, progress: null }
+        return { ...base, ...getReadingGoal(result.data, year), dataStale: result.status === 'stale' }
+      }
+
+      if (entry.source === 'hackathons') {
+        const [result, year] = await Promise.all([getHackathonData(), getCurrentYear()])
+        if (result.data === null) return { ...base, progress: null }
+        const wins = getYearlyWins(result.data, year)
+        return { ...base, progress: wins.length, wins, dataStale: result.status === 'stale' }
       }
 
       if (entry.source === 'whoop') {

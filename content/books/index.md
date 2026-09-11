@@ -1,5 +1,6 @@
 ---
-# The master list of every book on the /books page, in one place.
+# Historical backup only. The website reads Notion; edits here have no effect.
+# See docs/notion-data.md for the active editing workflow.
 #
 # - status: "reading" | "upcoming" | "completed" — move a book between
 #   these as it progresses. Only the first 4 "upcoming" books (by order)

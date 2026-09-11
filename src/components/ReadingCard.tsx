@@ -1,11 +1,8 @@
 import Image from 'next/image'
 import type { BookMeta } from '@/lib/books'
 
-function formatBookDate(date: string): string {
-  const parsed = new Date(date)
-  if (Number.isNaN(parsed.getTime())) return date
-  return new Intl.DateTimeFormat('en-GB').format(parsed)
-}
+import { formatCalendarDate as formatBookDate } from '@/lib/calendar'
+import { needsUnoptimizedCover } from '@/lib/safe-url'
 
 export default function ReadingCard({ book, priority }: { book: BookMeta; priority?: boolean }) {
   return (
@@ -14,6 +11,7 @@ export default function ReadingCard({ book, priority }: { book: BookMeta; priori
         {book.cover ? (
           <Image
             src={book.cover}
+            unoptimized={needsUnoptimizedCover(book.cover)}
             alt={book.title}
             fill
             sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw"
