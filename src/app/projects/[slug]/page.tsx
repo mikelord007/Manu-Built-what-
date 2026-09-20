@@ -172,6 +172,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     fill
                     sizes="(max-width: 767px) 100vw, 768px"
                     className="object-cover"
+                    unoptimized={/\.gif$/i.test(mediaSrc)}
                     priority
                   />
                 </div>

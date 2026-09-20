@@ -5,8 +5,8 @@ date: "2026-09-20"
 category: ai
 image: "/images/fruit-fly-fruit-ninja.png"
 imageAspect: "2 / 1"
-detailMedia: "/images/fruit-fly-fruit-ninja-gameplay.jpg"
-detailAspect: "1440 / 650"
+detailMedia: "/images/fruit-fly-fruit-ninja-gameplay.gif"
+detailAspect: "8 / 5"
 liveUrl: "https://fruit-fly-fruit-ninja.vercel.app/"
 ---
 
