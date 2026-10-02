@@ -8,11 +8,14 @@ detailMedia: "/images/wanderkin-gameplay.mp4"
 detailAspect: "15 / 8"
 liveUrl: "https://wanderkin-tau.vercel.app/"
 githubUrl: "https://github.com/mikelord007/Wanderkin"
+winner: true
 ---
 
 Photograph something ordinary and Wanderkin rebuilds it in 3D, then shrinks you down until it towers over you. A desk becomes a cliff, a shoe a mountain, a sofa a plateau. You run, jump, climb, and swing a grappling hook across the thing you photographed, set in a biome you choose and scored by its own chiptune.
 
 The landing page has four worlds already built in (a desk on a beach, a plane in the snow, a boot in the rain, a car in the dunes), so you can play without taking a photo.
+
+Built for the **Livepeer x Embody hackathon**, where it won $1,000. [See the announcement on X](https://x.com/topagentmike007/status/2105518462626095286).
 
 ---
 
